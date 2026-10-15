@@ -1,0 +1,13 @@
+Your submission section is open. Five things go into it:
+
+ 
+A pitch deck on the prescribed template.
+ 
+A demo video showing the solution actually working.
+ 
+A live deployed prototype link that stays up through evaluation.
+ 
+An accessible GitHub repository.
+ 
+A brief description of what you built.
+Built with Google AI models such as Gemini or Gemma, or an agentic platform, and deployed on Google Cloud via Cloud Run or Firebase. Deploy early rather than on the 17th — a prototype link that's down during evaluation counts for nothing.

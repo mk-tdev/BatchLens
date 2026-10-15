@@ -4,7 +4,7 @@
 
 BatchLens turns a manufacturing quality investigation into an interactive factory story. Walk through Northstar’s night shift with Mira, Sol and Pip, use Gemini to read source documents, trace a component lot into shipments, and approve an inspection proposal backed by original evidence.
 
-[Live demo](https://batchlens-hk3hxwi5na-as.a.run.app/) · [Demo script](docs/project/03_User_Guide_and_Demo_Script.md) · [How it works](docs/project/02_How_It_Works.md)
+[Live demo](https://batchlens-hk3hxwi5na-as.a.run.app/) · [Demo script](research/BatchLens/03_User_Guide_and_Demo_Script.md) · [How it works](research/BatchLens/02_How_It_Works.md)
 
 ![The Northstar Night Shift factory](docs/night-shift-preview.jpg)
 
@@ -94,7 +94,7 @@ backend/scenarios/    Original synthetic evidence and CSV records
 scripts/              Development, evidence rendering, cleanup, live smoke check
 tests/                Backend regression and Playwright browser tests
 deploy/               Cloud Build and Cloud Run deployment scripts
-docs/project/         Project explanation, user guide, submission preparation
+research/BatchLens/         Project explanation, user guide, submission preparation
 ```
 
 ## Google Cloud deployment
@@ -142,12 +142,14 @@ Recorded on 15 October 2026: 10 backend tests and the production build passed. T
 
 ## Team handoff and documentation
 
-A teammate needs repository access to clone a private repository. They can use authored local mode immediately; cloud access is separate from GitHub access. Work on a feature branch and open a pull request before changing the shared demo.
+The repository is public for teammates and hackathon judges. Anyone can clone it and use authored local mode immediately; write access and cloud access are granted separately. Work on a feature branch and open a pull request before changing the shared demo.
 
-- [Project overview and impact](docs/project/01_Project_Overview.md)
-- [Technical explanation](docs/project/02_How_It_Works.md)
-- [User guide and three-minute demo script](docs/project/03_User_Guide_and_Demo_Script.md)
-- [Submission checklist and judge Q&A](docs/project/04_Submission_Checklist_and_Judge_QA.md)
+- [Project overview and impact](research/BatchLens/01_Project_Overview.md)
+- [Technical explanation](research/BatchLens/02_How_It_Works.md)
+- [User guide and three-minute demo script](research/BatchLens/03_User_Guide_and_Demo_Script.md)
+- [Submission checklist and judge Q&A](research/BatchLens/04_Submission_Checklist_and_Judge_QA.md)
+- [Deployment and live verification](research/BatchLens/05_Deployment_and_Verification.md)
+- [All research and organizer requirements](research/BatchLens/README.md)
 - [Asset provenance](docs/provenance.md)
 - [Original build plan](BUILD_PLAN.md) — design intent and historical scope, not a claim that every planned feature shipped.
 
