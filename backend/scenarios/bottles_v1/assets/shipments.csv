@@ -1,0 +1,5 @@
+shipment_id,finished_batch,units,destination
+S1,B101,600,Singapore Central
+S2,B102,400,Johor Bahru North
+S3,B103,500,Kuala Lumpur West
+S4,,500,Penang East

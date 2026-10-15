@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.venv/
+__pycache__/
+.pytest_cache/
+.env
+.data/
+test-results/
+playwright-report/
+
+*.tsbuildinfo
+
+# Local secrets, generated files and private billing evidence
+.env.*
+!.env.example
+.DS_Store
+*.pem
+*.key
+*service-account*.json
+*credentials*.json
+docs/billing-*

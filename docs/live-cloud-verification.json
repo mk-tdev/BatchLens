@@ -1,0 +1,170 @@
+{
+  "url": "https://batchlens-hk3hxwi5na-as.a.run.app",
+  "started_at": "2026-10-15T15:43:12Z",
+  "extractions": [
+    {
+      "artifact_id": "E2",
+      "provider": "gemini",
+      "model": "gemini-3.5-flash-lite",
+      "value": "B101",
+      "quote": "B101",
+      "latency_ms": 26937,
+      "response_id": "kfTQatTXN7LGk7QP_oyBuQ8",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 25,
+        "candidates_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 25
+          }
+        ],
+        "prompt_token_count": 1199,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 119
+          },
+          {
+            "modality": "IMAGE",
+            "token_count": 1080
+          }
+        ],
+        "thoughts_token_count": null,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 1224,
+        "traffic_type": "ON_DEMAND"
+      }
+    },
+    {
+      "artifact_id": "E3",
+      "provider": "gemini",
+      "model": "gemini-3.5-flash-lite",
+      "value": "CAP-17",
+      "quote": "COMPONENT LOT\nCAP-17",
+      "latency_ms": 1748,
+      "response_id": "rfTQatX3A_ysrtoPk_aIwAY",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 29,
+        "candidates_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 29
+          }
+        ],
+        "prompt_token_count": 1207,
+        "prompt_tokens_details": [
+          {
+            "modality": "IMAGE",
+            "token_count": 1080
+          },
+          {
+            "modality": "TEXT",
+            "token_count": 127
+          }
+        ],
+        "thoughts_token_count": null,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 1236,
+        "traffic_type": "ON_DEMAND"
+      }
+    },
+    {
+      "artifact_id": "E6",
+      "provider": "gemini",
+      "model": "gemini-3.5-flash-lite",
+      "value": null,
+      "quote": "S4",
+      "latency_ms": 1679,
+      "response_id": "r_TQasGZGoKCoLAP9_vq-Qw",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 19,
+        "candidates_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 19
+          }
+        ],
+        "prompt_token_count": 1202,
+        "prompt_tokens_details": [
+          {
+            "modality": "IMAGE",
+            "token_count": 1080
+          },
+          {
+            "modality": "TEXT",
+            "token_count": 122
+          }
+        ],
+        "thoughts_token_count": null,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 1221,
+        "traffic_type": "ON_DEMAND"
+      }
+    },
+    {
+      "artifact_id": "E7",
+      "provider": "gemini",
+      "model": "gemini-3.5-flash-lite",
+      "value": "B104",
+      "quote": "B104",
+      "latency_ms": 1614,
+      "response_id": "sfTQaoXfIJm1k7QPkYvCiAE",
+      "usage": {
+        "cache_tokens_details": null,
+        "cached_content_token_count": null,
+        "candidates_token_count": 25,
+        "candidates_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 25
+          }
+        ],
+        "prompt_token_count": 1202,
+        "prompt_tokens_details": [
+          {
+            "modality": "IMAGE",
+            "token_count": 1080
+          },
+          {
+            "modality": "TEXT",
+            "token_count": 122
+          }
+        ],
+        "thoughts_token_count": null,
+        "tool_use_prompt_token_count": null,
+        "tool_use_prompt_tokens_details": null,
+        "total_token_count": 1227,
+        "traffic_type": "ON_DEMAND"
+      }
+    }
+  ],
+  "health": {
+    "status": "ok",
+    "storage": "firestore",
+    "ai_mode": "gemini",
+    "model": "gemini-3.5-flash-lite"
+  },
+  "totals": {
+    "included": 1500,
+    "unresolved": 0,
+    "outside": 500,
+    "unreviewed": 0,
+    "total": 2000,
+    "inspection": 1500
+  },
+  "exports": [
+    "html",
+    "csv"
+  ],
+  "reload": "passed",
+  "result": "passed"
+}
