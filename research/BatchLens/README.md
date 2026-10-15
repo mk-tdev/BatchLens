@@ -10,4 +10,8 @@ Read these documents in order to explain the project and prepare the hackathon s
 4. [Submission checklist and judge questions](04_Submission_Checklist_and_Judge_QA.md) — the five organizer requirements, deck content and honest answers.
 5. [Deployment and verification](05_Deployment_and_Verification.md) — actual hosting and live-AI verification status.
 
-The organizer requirements are preserved in [requirements.txt](../requirements.txt). The public source repository is [mk-tdev/BatchLens](https://github.com/mk-tdev/BatchLens). A prescribed deck template and a recorded demo video remain separate submission artifacts.
+The organizer requirements are preserved in [requirements.txt](../requirements.txt). The public source repository is [mk-tdev/BatchLens](https://github.com/mk-tdev/BatchLens). The pitch uses the prescribed organizer template. The actual demo recording and its URL are still required.
+
+6. [Three-minute recording script](06_Three_Minute_Demo_Script.md) — timed narration, exact clicks, recording guidance and truthful AI disclosures.
+
+**Pitch deck:** https://docs.google.com/presentation/d/1_EZO4q_fb1DqmobJcNyoKLMNwv2pT2bQ2s4mr_dYXNs/edit

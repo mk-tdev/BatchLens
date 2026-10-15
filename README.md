@@ -149,6 +149,7 @@ The repository is public for teammates and hackathon judges. Anyone can clone it
 - [User guide and three-minute demo script](research/BatchLens/03_User_Guide_and_Demo_Script.md)
 - [Submission checklist and judge Q&A](research/BatchLens/04_Submission_Checklist_and_Judge_QA.md)
 - [Deployment and live verification](research/BatchLens/05_Deployment_and_Verification.md)
+- [Three-minute video recording script](research/BatchLens/06_Three_Minute_Demo_Script.md)
 - [All research and organizer requirements](research/BatchLens/README.md)
 - [Asset provenance](docs/provenance.md)
 - [Original build plan](BUILD_PLAN.md) — design intent and historical scope, not a claim that every planned feature shipped.
