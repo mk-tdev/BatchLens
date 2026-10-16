@@ -20,3 +20,9 @@ The original tool output was copied into the project. Evidence documents were ge
 Original procedural Three.js factory, robot Pip, crew, forklift, drone, conveyor, animated scanner, station labels, and SVG Pip portrait authored for BatchLens. No Village of Shadows assets or source code copied; the referenced chat informed the use of an explorable world and state-driven characters. Characters are scripted guides, explicitly labeled; the scene is illustrative, not a live factory digital twin. Three.js 0.180.0 (MIT) is the rendering dependency, loaded in a separate chunk.
 
 The factory-room expansion adds original animated SVG portraits for Mira and Sol, a source-scanning workbench, pinned evidence cards, a blueprint trace, shipment crate manifests, an inspection ticket and a shift journal. All are code-native artwork. Scanner motion reflects an in-flight extraction request; it does not imply live Gemini in authored demo mode. Source images and source quotations remain unchanged.
+
+## Pitch deck night-shift redesign — 17 October 2026
+
+The pitch uses a generated cinematic factory illustration (`docs/submission/night-shift-art.png`) as cover and closing atmosphere. It is illustrative and does not depict a real plant or replace product evidence. The original app SVG portraits of Mira, Sol and Pip were rendered to PNG without redesign. `factory-motion.gif` uses browser-recorded frames of the real app's animated factory. Product evidence screenshots remain distinct from the illustration.
+
+The native Google Slides deck retains organizer branding and required subject sections, with a midnight-green, mint and amber treatment matching BatchLens. Its factory GIF provides motion in supported presentation playback; PDF exports are static.
