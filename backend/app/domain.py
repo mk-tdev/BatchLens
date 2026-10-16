@@ -68,9 +68,26 @@ def scope(case):
 def event(case,title,detail):
     case['history'].append({'id':str(uuid.uuid4()),'at':now(),'title':title,'detail':detail,'revision':case['revision']+1})
 
+def investigation_report(case):
+    """Display/export a factual assessment diff, not a second model-authored claim."""
+    report=(case.get('investigator') or {}).get('report')
+    if not report:return report
+    previous=(case.get('past_investigations') or [{}])[-1].get('report')
+    if not previous:
+        changes='Initial assessment. No previous completed report is available for comparison.'
+    else:
+        before={h['cause'].casefold():h['assessment'] for h in previous.get('hypotheses',[])}
+        rows=[]
+        for h in report.get('hypotheses',[]):
+            old=before.get(h['cause'].casefold())
+            rows.append(f"{h['cause']}: {old or 'new hypothesis'} → {h['assessment']}" if old!=h['assessment'] else f"{h['cause']}: remains {h['assessment']}")
+        results=[m['result']['id'] for m in case.get('missions',[]) if m.get('result') and m['result']['recorded_at']<=case['investigator']['started_at']]
+        changes=('Results available for reassessment: '+', '.join(results)+'. ' if results else '')+'; '.join(rows)+'. These are changes in Gemini’s hypotheses, not proof of root cause.'
+    return {**report,'changed_since_previous':changes,'change_summary_origin':'server comparison of saved Gemini assessments'}
+
 def public(case, mode):
     return {k:case[k] for k in ['id','revision','created_at','baseline','suspect_lot','resolved_batch','added_clear_slip','candidates','history','proposals','model_attempts']} | {
         'scope':scope(case), 'artifacts':[a for a in ARTIFACTS if a['id']!='E7' or case['added_clear_slip']],
-        'missions':case.get('missions',[]), 'chat':case.get('chat',[]), 'actions_approval':case.get('actions_approval'), 'past_investigations':case.get('past_investigations',[]), 'investigator':case.get('investigator'), 'agent_model_attempts':case.get('agent_model_attempts',0),
+        'missions':case.get('missions',[]), 'chat':case.get('chat',[]), 'actions_approval':case.get('actions_approval'), 'past_investigations':case.get('past_investigations',[]), 'investigator':({**case['investigator'],'report':investigation_report(case)} if case.get('investigator') else None), 'agent_model_attempts':case.get('agent_model_attempts',0),
         'batches':BATCHES,'mode':mode,'scenario_version':'bottles_v1',
     }

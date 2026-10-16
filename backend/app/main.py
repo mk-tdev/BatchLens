@@ -132,7 +132,7 @@ def command(id:str,body:Command,request:Request):
             if not case['baseline']: raise HTTPException(422,'Review baseline evidence before preparing a proposal.')
             if len(case['proposals'])>=3: raise HTTPException(429,'Three proposal snapshots are available per demo case.')
             snap=domain.scope(case)
-            proposal={'id':str(uuid.uuid4()),'created_at':domain.now(),'revision':case['revision'],'scope':snap,'note':body.note,'suspect_lot':case['suspect_lot'],'sources':[a for a in domain.ARTIFACTS if a['id']!='E7' or case['added_clear_slip']],'candidate_snapshot':json.loads(json.dumps(case['candidates'])),'missions_snapshot':json.loads(json.dumps(case.get('missions',[]))),'actions_approval':case.get('actions_approval'),'comparison':(case.get('investigator') or {}).get('comparison'),'investigator_report':json.loads(json.dumps((case.get('investigator') or {}).get('report')))}
+            proposal={'id':str(uuid.uuid4()),'created_at':domain.now(),'revision':case['revision'],'scope':snap,'note':body.note,'suspect_lot':case['suspect_lot'],'sources':[a for a in domain.ARTIFACTS if a['id']!='E7' or case['added_clear_slip']],'candidate_snapshot':json.loads(json.dumps(case['candidates'])),'missions_snapshot':json.loads(json.dumps(case.get('missions',[]))),'actions_approval':case.get('actions_approval'),'comparison':(case.get('investigator') or {}).get('comparison'),'investigator_report':json.loads(json.dumps(domain.investigation_report(case)))}
             case['proposals'].append(proposal)
             domain.event(case,'Inspection proposal saved',f"{snap['totals']['inspection']:,} units · reviewed revision {case['revision']}")
         case['revision']+=1

@@ -107,3 +107,13 @@ def test_new_result_blocks_stale_action_approval(setup,monkeypatch):
   case['missions']=[{'id':'m','result':{'recorded_at':'2026-01-02'}}]
  main.store.mutate(c['id'],seed)
  assert mission_post(client,c,'approve_actions').status_code==422
+
+
+def test_assessment_diff_uses_saved_reports_not_model_change_claim():
+ c={'investigator':{'started_at':'2026-10-17','report':{'changed_since_previous':'Initial assessment; no previous report','hypotheses':[{'cause':'Component defect','assessment':'supported'},{'cause':'Assembly variation','assessment':'unresolved'}]}},'past_investigations':[{'report':{'hypotheses':[{'cause':'Component defect','assessment':'unresolved'},{'cause':'Assembly variation','assessment':'unresolved'}]}}],'missions':[{'result':{'id':'R1','recorded_at':'2026-10-16'}}]}
+ r=main.domain.investigation_report(c)
+ assert 'unresolved → supported' in r['changed_since_previous']
+ assert 'Assembly variation: remains unresolved' in r['changed_since_previous']
+ assert 'R1' in r['changed_since_previous']
+ assert r['change_summary_origin'].startswith('server comparison')
+ assert c['investigator']['report']['changed_since_previous'].startswith('Initial')
