@@ -1,0 +1,5 @@
+E8 — NORTHSTAR BOTTLES / FICTIONAL DEMO PROCEDURES
+These procedures and values exist only for the hackathon synthetic case. They are not production safety standards. A supervisor must authorize actual procedures outside this demo.
+seal_check: Compare a labelled group of CAP-17 or CAP-18 samples. Record sample IDs, method, tested count, leaking count and observations. Maximum 20 samples in this demo interface is a workload limit, not a statistical sampling plan. Do not extrapolate results to all stock.
+settings_review: Compare E9 records with the fictional setup reference: Line A capper setpoint 1.2 Nm, logged every 30 minutes. A recorded setpoint is not measured closure torque. Missing calibration and physical readings prevent ruling out assembly variation. Record checked record IDs and discrepancies.
+No test result authorizes release, recall, a machine setting change or declaring a root cause proven.

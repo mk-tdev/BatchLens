@@ -1,0 +1,4 @@
+E9 — SYNTHETIC NIGHT SHIFT RECORD
+B101, B102, B104 / Line A / capper setpoint 1.2 Nm at 22:00, 22:30 and 23:00.
+B103 / Line B / capper setpoint 1.2 Nm at 22:00.
+No measured closure-torque readings were retained. Calibration verification is not attached. Operators recorded no setpoint changes. This is evidence of logged settings only, not evidence of correct physical torque.

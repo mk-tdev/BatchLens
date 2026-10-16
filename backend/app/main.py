@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request, Response, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
-from . import domain, ai, investigator
+from . import domain, ai, investigator, operations, copilot
 from .storage import make_store
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -132,7 +132,7 @@ def command(id:str,body:Command,request:Request):
             if not case['baseline']: raise HTTPException(422,'Review baseline evidence before preparing a proposal.')
             if len(case['proposals'])>=3: raise HTTPException(429,'Three proposal snapshots are available per demo case.')
             snap=domain.scope(case)
-            proposal={'id':str(uuid.uuid4()),'created_at':domain.now(),'revision':case['revision'],'scope':snap,'note':body.note,'suspect_lot':case['suspect_lot'],'sources':[a for a in domain.ARTIFACTS if a['id']!='E7' or case['added_clear_slip']],'candidate_snapshot':json.loads(json.dumps(case['candidates'])),'investigator_report':json.loads(json.dumps((case.get('investigator') or {}).get('report')))}
+            proposal={'id':str(uuid.uuid4()),'created_at':domain.now(),'revision':case['revision'],'scope':snap,'note':body.note,'suspect_lot':case['suspect_lot'],'sources':[a for a in domain.ARTIFACTS if a['id']!='E7' or case['added_clear_slip']],'candidate_snapshot':json.loads(json.dumps(case['candidates'])),'missions_snapshot':json.loads(json.dumps(case.get('missions',[]))),'actions_approval':case.get('actions_approval'),'comparison':(case.get('investigator') or {}).get('comparison'),'investigator_report':json.loads(json.dumps((case.get('investigator') or {}).get('report')))}
             case['proposals'].append(proposal)
             domain.event(case,'Inspection proposal saved',f"{snap['totals']['inspection']:,} units · reviewed revision {case['revision']}")
         case['revision']+=1
@@ -223,6 +223,78 @@ async def investigate(id:str,body:InvestigatorRequest,request:Request):
         return domain.public(case,ai.mode())
     return store.mutate(id,finish)
 
+@app.post('/api/investigations/{id}/missions')
+def mission_command(id:str,body:operations.MissionCommand,request:Request):
+    fingerprint=hashlib.sha256(body.model_dump_json().encode()).hexdigest()
+    def apply(case):
+        check(case,request)
+        prior=case['requests'].get(body.request_id)
+        if prior:
+            if prior['hash']!=fingerprint:raise HTTPException(409,'Request ID reused with different input.')
+            return prior['result']
+        if investigator.active(case):raise HTTPException(409,'Wait for Pip to finish before changing reviewed state.')
+        if body.expected_revision!=case['revision']:raise HTTPException(409,'Case changed. Reload before reviewing.')
+        if len(case['requests'])>=24:raise HTTPException(429,'Case action limit reached.')
+        if body.action=='approve_actions':
+            run=case.get('investigator') or {}
+            if not case['baseline'] or not (run.get('report') or {}).get('corrective_actions'):raise HTTPException(422,'Review baseline and generate action drafts first.')
+            if any(m.get('result') and m['result']['recorded_at']>run.get('started_at','') for m in case.get('missions',[])):raise HTTPException(422,'Reassess the new operator results before approving action drafts.')
+            case['actions_approval']={'run_id':run['id'],'at':domain.now(),'note':body.note,'status':'approved_for_handover'}
+            domain.event(case,'Corrective-action draft reviewed',body.note+' · No work order dispatched.')
+        else:
+            mission=next((m for m in case.get('missions',[]) if m['id']==body.mission_id),None)
+            if not mission:raise HTTPException(404,'Mission not found.')
+            if body.action=='approve_mission':
+                if mission['status']!='proposed':raise HTTPException(422,'Only proposed missions can be approved.')
+                mission.update(status='approved',approved_at=domain.now(),approval_note=body.note)
+                domain.event(case,'Operator approved demo mission',mission['title'])
+            else:
+                if mission['status']!='approved':raise HTTPException(422,'Approve the mission before recording a result. Completed records cannot be overwritten.')
+                mission['result']={'id':'R'+str(len([m for m in case.get('missions',[]) if m.get('result')])+1),'recorded_at':domain.now(),'origin':'operator-entered synthetic demo result','procedure_id':mission['procedure_id'],'lot':mission['lot'],'sample_ids':body.sample_ids,'tested':body.tested,'failed':body.failed,'outcome':body.outcome,'observation':body.note}
+                mission['status']='completed'
+                case['actions_approval']=None
+                domain.event(case,'Operator recorded synthetic result',mission['result']['id']+' · '+body.note)
+        case['revision']+=1
+        result=domain.public(case,ai.mode());case['requests'][body.request_id]={'hash':fingerprint,'result':result}
+        return result
+    return store.mutate(id,apply)
+
+@app.post('/api/investigations/{id}/chat')
+async def operational_chat(id:str,body:copilot.ChatRequest,request:Request):
+    read(id,request)
+    if ai.mode()!='gemini':raise HTTPException(503,'Operational chat requires real Gemini.')
+    def reserve(case):
+        check(case,request)
+        prior=next((m for m in case.get('chat',[]) if m['id']==body.request_id),None)
+        if prior:
+            if prior['question']!=body.question:raise HTTPException(409,'Request ID reused.')
+            return prior
+        if investigator.active(case):raise HTTPException(409,'Wait for the current AI task to finish.')
+        if any(j['status']=='running' and j['lease']>time.time() for j in case['jobs'].values()):raise HTTPException(409,'Wait for the current source scan.')
+        if case.get('chat_attempts',0)>=6:raise HTTPException(429,'Six operational questions are available per case.')
+        case['chat_attempts']=case.get('chat_attempts',0)+1
+        case['chat_job']={'id':body.request_id,'lease':time.time()+70}
+    previous=store.mutate(id,reserve)
+    if previous:return domain.public(read(id,request),ai.mode())
+    def budget():
+        def charge(case):
+            check(case,request)
+            if case.get('chat_job',{}).get('id')!=body.request_id or case['chat_job']['lease']<time.time():raise ValueError('Chat lease expired')
+            if case.get('chat_model_attempts',0)>=12:raise ValueError('Chat model budget reached')
+            case['chat_model_attempts']=case.get('chat_model_attempts',0)+1
+        store.mutate(id,charge);store.reserve_model_budget()
+    try:
+        answer=await asyncio.wait_for(copilot.respond(read(id,request),body.question,budget),timeout=55)
+    except Exception:
+        answer={'answer':'Pip could not verify an answer. Try again within the remaining case budget or inspect the original evidence. No decisions changed.','sources':[],'status':'failed'}
+    def finish(case):
+        check(case,request)
+        if case.get('chat_job',{}).get('id')==body.request_id:
+            case.setdefault('chat',[]).append({'id':body.request_id,'question':body.question,**answer,'at':domain.now()})
+            case['chat_job']['lease']=0
+        return domain.public(case,ai.mode())
+    return store.mutate(id,finish)
+
 @app.get('/api/investigations/{id}/proposals/{proposal_id}/export')
 def export(id:str,proposal_id:str,request:Request,format:Literal['html','csv']='html'):
     case=read(id,request); proposal=next((p for p in case['proposals'] if p['id']==proposal_id),None)
@@ -244,6 +316,9 @@ def export(id:str,proposal_id:str,request:Request,format:Literal['html','csv']='
     if report:
         items=''.join('<li><strong>'+e(f['finding'])+'</strong><p>Proposed check: '+e(f['proposed_check'])+'</p><p>Sources: '+e(', '.join(f['sources']))+'</p></li>' for f in report['findings'])
         agent_html='<h2>Pip’s AI draft at handover</h2><p>AI recommendations, not approved physical actions. Reviewer approval applies to the saved scope.</p><p>'+e(report['summary'])+'</p><ul>'+items+'</ul><h3>Open questions</h3><ul>'+''.join('<li>'+e(q)+'</li>' for q in report['unresolved'])+'</ul>'
+    if report:
+        agent_html+='<h3>Cause comparison</h3><pre>'+e(json.dumps(report.get('hypotheses',[]),indent=2))+'</pre><h3>Changes after operator results</h3><p>'+e(report.get('changed_since_previous',''))+'</p><h3>Corrective-action drafts</h3><pre>'+e(json.dumps(report.get('corrective_actions',[]),indent=2))+'</pre>'
+    agent_html+='<h3>Mission records (synthetic)</h3><pre>'+e(json.dumps(proposal.get('missions_snapshot',[]),indent=2))+'</pre><h3>Action review</h3><pre>'+e(json.dumps(proposal.get('actions_approval') or {'status':'not approved'},indent=2))+'</pre><h3>Illustrative scope comparison</h3><pre>'+e(json.dumps(proposal.get('comparison'),indent=2))+'</pre>'
     content=f'''<!doctype html><html lang="en"><meta charset="utf-8"><title>BatchLens inspection proposal</title><style>body{{font:15px system-ui;color:#233b32;max-width:1050px;margin:60px auto;padding:30px}}h1{{font-size:36px}}table{{border-collapse:collapse;width:100%}}td,th{{border-bottom:1px solid #ddd;padding:14px;text-align:left}}.notice{{padding:18px;background:#f2f4ec}}@media print{{body{{margin:0}}}}</style><h1>BatchLens inspection proposal</h1><p class="notice">Synthetic case · Requires quality review. Shared exposure does not prove a defect. No recorded connection does not certify safety.</p><p>Frozen revision {proposal['revision']} · Engine 1.0.0 · {e(proposal['created_at'])}</p><h2>{proposal['scope']['totals']['inspection']:,} units proposed for inspection</h2><p>Includes connected and unresolved shipment lines. Suspect lot: {e(proposal['suspect_lot'])}.</p><table><tr><th>Shipment</th><th>Units</th><th>Batch</th><th>Status</th><th>Reason</th><th>Sources</th></tr>{trs}</table><h2>Reviewer note</h2><p>{e(proposal['note'] or 'No additional note.')}</p>{agent_html}<h2>Source manifest</h2><ul>{sources}</ul><h2>Extraction excerpts</h2><ul>{quotes}</ul><p>Source images are available in the investigation until its 24-hour expiry. This file preserves the reviewed scope and excerpts.</p></html>'''
     return HTMLResponse(content,headers={'Content-Disposition':'attachment; filename="batchlens-inspection.html"'})
 

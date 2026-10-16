@@ -31,6 +31,9 @@ ARTIFACTS = [
     {'id':'E4','name':'Production records','file':'production.csv','kind':'csv','label':'BATCH GENEALOGY','description':'Component lots assigned to finished batches.','size':'4 rows'},
     {'id':'E5','name':'Shipment ledger','file':'shipments.csv','kind':'csv','label':'DISTRIBUTION','description':'Four shipment lines. One batch reference is missing.','size':'4 rows'},
     {'id':'E6','name':'Original packing slip','file':'packing-slip-obscured.png','kind':'image','label':'INCOMPLETE RECORD','description':'Shipment S4 is readable. Its batch identifier is obscured.','size':'Image'},
+    {'id':'E8','name':'Demo inspection procedures','file':'procedures.txt','kind':'text','label':'FICTIONAL SOP','description':'Procedure references for the synthetic inspection missions.','size':'Text'},
+    {'id':'E9','name':'Assembly shift record','file':'assembly.txt','kind':'text','label':'SYNTHETIC OPERATIONS','description':'Setpoints and calibration uncertainty for the night shift.','size':'Text'},
+    {'id':'E10','name':'Handling record','file':'handling.txt','kind':'text','label':'SYNTHETIC DISPATCH','description':'Handling checks and their limits.','size':'Text'},
     {'id':'E7','name':'Recovered packing slip','file':'packing-slip-clear.png','kind':'image','label':'SUPPLEMENTARY EVIDENCE','description':'A legible replacement for the S4 packing slip.','size':'Image'},
 ]
 
@@ -68,6 +71,6 @@ def event(case,title,detail):
 def public(case, mode):
     return {k:case[k] for k in ['id','revision','created_at','baseline','suspect_lot','resolved_batch','added_clear_slip','candidates','history','proposals','model_attempts']} | {
         'scope':scope(case), 'artifacts':[a for a in ARTIFACTS if a['id']!='E7' or case['added_clear_slip']],
-        'investigator':case.get('investigator'), 'agent_model_attempts':case.get('agent_model_attempts',0),
+        'missions':case.get('missions',[]), 'chat':case.get('chat',[]), 'actions_approval':case.get('actions_approval'), 'past_investigations':case.get('past_investigations',[]), 'investigator':case.get('investigator'), 'agent_model_attempts':case.get('agent_model_attempts',0),
         'batches':BATCHES,'mode':mode,'scenario_version':'bottles_v1',
     }
