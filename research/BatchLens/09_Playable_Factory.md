@@ -11,3 +11,12 @@ This is an illustrative, synthetic factory story, not a measured facility digita
 ## Pitch template alignment
 
 The organizer's cover artwork and closing artwork are retained. Cover team: PixelTrendAnalytics. Team leader: Muthukumar Arunachalam. The interior slides follow the template sequence: idea, opportunities (difference, solution, USP), features, process flow, optional wireframes, architecture, technologies, optional cost, snapshots, performance, future and links. The optional cost slide explicitly says a pilot estimate has not yet been measured. Performance figures describe the previously observed synthetic-case run, not production benchmarks. The 3-minute demo link remains pending while recording is paused.
+
+## Verification, 17 October 2026
+
+- TypeScript and production build passed; 10 backend tests passed.
+- Internal-browser checks: enter/exit, camera following, keyboard movement beyond the original front aisle, workbench collision, and proximity interaction opening Mira's existing workbench.
+- Local authored-mode regression from that interaction: scan E2/E3, open E4/E5, confirm baseline, recover and confirm E7, save the 1,500-unit proposal, reload, and verify 3/3 objectives with zero unresolved units. This check used authored extraction; it is not additional evidence of live Gemini performance.
+- All 14 pitch slides exported and visually checked. Corrected the optional cost heading to prevent overlap. Organizer first/last artwork restored, editable cover details filled, and playable-floor screenshot included.
+
+- Deployed commit `fd005cc` as Cloud Run revision `batchlens-00003-6f2`, serving 100% of traffic. Verified the existing submission URL, retained live Gemini case (1,500 connected / 0 unresolved), playable floor and dispatch E interaction opening the handover. No new inference was required for this frontend-only deployment check. Existing runtime, access and usage settings were retained.
