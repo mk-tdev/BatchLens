@@ -82,7 +82,7 @@ def test_tool_budget_reserves_report_and_final_turn_forces_submission(setup,monk
  client,c=setup;seen=[]
  class Models:
   async def generate_content(self,**kw):
-   seen.append(kw['config'].response_schema)
+   seen.append(kw['config'].response_json_schema)
    if len(seen)<6:
     name,args='read_document',{'artifact_id':'E1'}
    else:
@@ -98,7 +98,7 @@ def test_tool_budget_reserves_report_and_final_turn_forces_submission(setup,monk
  monkeypatch.setattr(genai,'Client',Client);monkeypatch.setenv('GOOGLE_CLOUD_PROJECT','test')
  after=client.post(f"/api/investigations/{c['id']}/investigator",headers=HEAD,json={'request_id':str(uuid.uuid4())}).json()
  assert after['investigator']['status']=='awaiting_review'
- assert seen[-1]==investigator.FinalReport and after['agent_model_attempts']==6
+ assert seen[-1]['title']=='FinalReport' and after['agent_model_attempts']==6
 
 def test_new_result_blocks_stale_action_approval(setup,monkeypatch):
  client,c=setup
