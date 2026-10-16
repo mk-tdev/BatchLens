@@ -4,16 +4,17 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export type Station = 'evidence' | 'assembly' | 'dispatch';
 export type WorldState = {baseline:boolean;resolved:boolean;proposal:boolean;paused:boolean;station:Station;modalOpen:boolean};
-export type FactoryController={update:(s:WorldState)=>void;home:()=>void;dispose:()=>void};
+export type Telemetry={x:number;z:number;nearby:Station|null};
+export type FactoryController={update:(s:WorldState)=>void;home:()=>void;walk:(enabled:boolean)=>void;move:(key:string,down:boolean)=>void;interact:()=>void;dispose:()=>void};
 
-export function createFactory(container:HTMLElement,onStation:(id:Station)=>void,onReady:()=>void):FactoryController {
+export function createFactory(container:HTMLElement,onStation:(id:Station)=>void,onReady:()=>void,onTelemetry:(t:Telemetry)=>void,onInteract:(id:Station)=>void):FactoryController {
  const scene=new THREE.Scene();scene.background=new THREE.Color('#0b141c');
  scene.fog=new THREE.FogExp2('#0b141c',.018);
- const camera=new THREE.PerspectiveCamera(37,1,.1,120);camera.position.set(14,14,21);
+ const camera=new THREE.PerspectiveCamera(37,1,.1,120);camera.position.set(20,21,29);
  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});
  renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.8));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.5;
- container.appendChild(renderer.domElement);renderer.domElement.setAttribute('aria-label','Animated Northstar factory. Drag to orbit; use WASD or arrow keys while focused to move the inspection robot.');renderer.domElement.tabIndex=0;
- const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1,0);controls.enableDamping=true;controls.enablePan=false;controls.minDistance=16;controls.maxDistance=38;controls.minPolarAngle=.35;controls.maxPolarAngle=1.25;controls.update();
+ container.appendChild(renderer.domElement);renderer.domElement.setAttribute('aria-label','Northstar factory. Enter factory to walk with WASD or arrows; drag to look and press E near a station.');renderer.domElement.tabIndex=0;
+ const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1,0);controls.enableDamping=true;controls.enablePan=false;controls.minDistance=16;controls.maxDistance=48;controls.minPolarAngle=.35;controls.maxPolarAngle=1.25;controls.update();
  const geometry:THREE.BufferGeometry[]=[],materials:THREE.Material[]=[],textures:THREE.Texture[]=[];
  const mat=(color:string,metalness=.1,roughness=.6,emissive?:string)=>{const m=new THREE.MeshStandardMaterial({color,metalness,roughness,emissive:emissive||'#000000',emissiveIntensity:emissive?1.2:0});materials.push(m);return m};
  const navy=mat('#21343e'), wall=mat('#334650'), slate=mat('#4e626a'), dark=mat('#111d28'), cream=mat('#e1ddcb'), orange=mat('#ed9a46'), mint=mat('#83efd2'), steel=mat('#8fa5a8',.65,.32), rubber=mat('#101c25'), glow=mat('#8cf9dd',.2,.3,'#63e5ca'), goldGlow=mat('#ffc071',.1,.4,'#ffab48'), blueGlow=mat('#a8ddff',.1,.4,'#65bddd');
@@ -27,9 +28,9 @@ export function createFactory(container:HTMLElement,onStation:(id:Station)=>void
  scene.add(new THREE.HemisphereLight('#b9e9ff','#2c3942',2));const sun=new THREE.DirectionalLight('#e8f8ff',3.2);sun.position.set(3,17,12);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-14;sun.shadow.camera.right=14;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.bias=-.0005;sun.shadow.normalBias=.035;scene.add(sun);
  const warmLight=new THREE.PointLight('#ffb766',75,16,2);warmLight.position.set(-5,6,-1);scene.add(warmLight);const coolLight=new THREE.PointLight('#6edbcf',65,15,2);coolLight.position.set(5,5,1);scene.add(coolLight);
  // An open miniature factory stage. All geometry and characters are original.
- box(18,.8,12,navy,scene,0,-.55,0,.2);box(17.7,.15,11.7,slate,scene,0,-.08,0,.05);
+ box(30,.8,24,navy,scene,0,-.55,3,.2);box(29.7,.15,23.7,slate,scene,0,-.08,3,.05);
  const grid=new THREE.GridHelper(17.4,29,'#758e92','#566d73');grid.position.y=.009;scene.add(grid);
- box(18,3.4,.22,wall,scene,0,1.65,-5.9);box(.22,3.4,10.4,wall,scene,-8.9,1.65,-.8);
+ box(30,3.4,.22,wall,scene,0,1.65,-8.9);box(.22,3.4,24,wall,scene,-14.9,1.65,3);
  // Back-wall windows and luminous roof rails.
  for(let i=0;i<9;i++){box(1.65,1.45,.05,dark,scene,-7.8+i*1.92,2.15,-5.76);box(1.42,1.2,.025,blueGlow,scene,-7.8+i*1.92,2.15,-5.71);box(.045,1.2,.04,steel,scene,-7.8+i*1.92,2.15,-5.67)}
  for(let x=-8;x<=8;x+=4){box(.15,4,.15,steel,scene,x,2,-5.5);box(.18,.15,10.3,navy,scene,x,4,-.5);box(.09,.04,7,blueGlow,scene,x,3.89,-.5)}
@@ -66,6 +67,20 @@ export function createFactory(container:HTMLElement,onStation:(id:Station)=>void
  for(const x of [3.7,6.7])box(.12,2.4,.12,steel,scene,x,1.2,-4.9);
  for(const y of [.35,1.25,2.15]){box(3.2,.12,.8,navy,scene,5.2,y,-4.9);for(let j=0;j<4;j++)box(.55,.58,.65,j%2?orange:cream,scene,4.05+j*.73,y+.35,-4.9)}
  for(let i=0;i<3;i++){cyl(.4,1.15,navy,scene,-7.5+i*.9,.58,-3.9);cyl(.42,.05,steel,scene,-7.5+i*.9,1.13,-3.9)}
+
+ // Receiving wing, service plant and outbound staging surround the live line.
+ for(const x of [-11,11]){
+  box(3,.12,7,navy,scene,x,.04,1);
+  for(const z of [-1.5,1,3.5]){box(2.5,1.3,1.5,cream,scene,x,.75,z);box(2.52,.15,1.52,orange,scene,x,1.1,z)}
+ }
+ for(const x of [-11,-7,7,11]){cyl(.8,2.5,steel,scene,x,1.25,-7);cyl(.82,.12,mint,scene,x,2.5,-7)}
+ label('RECEIVING / MATERIALS',5,.7,scene,-10,3.2,-8.7);
+ label('OUTBOUND / HOLD FOR REVIEW',6,.7,scene,9,3.2,-8.7,'#ffcb89');
+ for(const x of [-11,-6,0,6,11]){box(.12,.02,10,cream,scene,x,.03,9,0)}
+ for(const z of [6,13])box(27,.02,.1,mint,scene,0,.03,z,0);
+ label('PEDESTRIAN ROUTE',4,.5,scene,-5,1,12,'#b9f4e3');
+ const obstacles=[[-7.6,-3.7,-1.6,1.6],[-1.6,1.6,-4.8,3], [3.1,7.7,-2.7,1.7], [3.3,7.2,-5.6,-4.2],[-8,-5,-4.6,-3.2],[-12.6,-9.4,-2.6,4.6],[9.4,12.6,-2.6,4.6],...[-11,-7,7,11].map(x=>[x-1.1,x+1.1,-8.1,-5.9])];
+ const blocked=(x:number,z:number)=>Math.abs(x)>14.2||z< -8.2||z>14.2||obstacles.some(([a,b,c,d])=>x>a-.3&&x<b+.3&&z>c-.3&&z<d+.3);
  // Little forklift, with a properly articulated driver.
  const lift=new THREE.Group();scene.add(lift);box(1.25,.55,1.6,orange,lift,0,.65,0);box(.75,.15,.8,dark,lift,0,1.02,.25);for(const x of [-.58,.58])for(const z of [-.5,.5]){const wheel=cyl(.25,.18,rubber,lift,x,.32,z);wheel.rotation.z=Math.PI/2;cyl(.1,.19,steel,lift,x,.32,z).rotation.z=Math.PI/2}for(const x of [-.5,.5])box(.07,1.2,.07,steel,lift,x,1.35,.55);box(1.2,.08,1.1,navy,lift,0,1.95,.15);for(const x of [-.42,.42]){box(.07,1.7,.1,steel,lift,x,1.1,-.83);box(.15,.07,1.2,steel,lift,x,.3,-1.35)}
  function crew(color:THREE.Material,x:number,z:number,helmetColor=orange){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);const skin=mat('#b18a71');const body=box(.47,.67,.31,color,g,0,.9,0,.09);box(.49,.11,.33,cream,g,0,.84,0);box(.09,.59,.34,cream,g,-.16,.95,0);box(.09,.59,.34,cream,g,.16,.95,0);sphere(.21,skin,g,0,1.45,0);const helmet=sphere(.24,helmetColor,g,0,1.59,0);helmet.scale.y=.55;box(.55,.055,.43,helmetColor,g,0,1.52,.04);box(.32,.08,.04,dark,g,0,1.46,.19);const arms:THREE.Group[]=[],legs:THREE.Group[]=[];for(const side of [-1,1]){const a=new THREE.Group();a.position.set(side*.3,1.15,0);g.add(a);box(.14,.48,.18,color,a,0,-.21,0,.06);sphere(.085,skin,a,0,-.49,0);arms.push(a);const leg=new THREE.Group();leg.position.set(side*.14,.6,0);g.add(leg);box(.17,.46,.22,navy,leg,0,-.2,0);box(.21,.13,.33,rubber,leg,0,-.45,.05);legs.push(leg)}return {g,body,arms,legs}}
@@ -84,11 +99,12 @@ export function createFactory(container:HTMLElement,onStation:(id:Station)=>void
  const drone=new THREE.Group();scene.add(drone);sphere(.22,cream,drone);box(.24,.08,.08,glow,drone,0,0,.2);const rotor=cyl(.5,.025,steel,drone,0,.3,0);rotor.scale.z=.12;
  const dots=new Float32Array(80*3);for(let i=0;i<80;i++){dots[i*3]=Math.sin(i*41.4)*10;dots[i*3+1]=1+(i%17)/3;dots[i*3+2]=Math.cos(i*57.2)*7}const particleGeometry=new THREE.BufferGeometry();particleGeometry.setAttribute('position',new THREE.BufferAttribute(dots,3));geometry.push(particleGeometry);const particleMat=new THREE.PointsMaterial({color:'#b3d9c9',size:.035,transparent:true,opacity:.35});materials.push(particleMat);const particles=new THREE.Points(particleGeometry,particleMat);scene.add(particles);
  const stationRings:Record<Station,THREE.Mesh>={} as Record<Station,THREE.Mesh>;for(const [id,g] of Object.entries(stations)){const m=new THREE.MeshBasicMaterial({color:'#89e4cb',transparent:true,opacity:.28,side:THREE.DoubleSide});materials.push(m);const ring=mesh(new THREE.RingGeometry(.35,.4,48),m,g,0,.04,2.2);ring.rotation.x=-Math.PI/2;stationRings[id as Station]=ring}
- let state:WorldState={baseline:false,resolved:false,proposal:false,paused:false,station:'evidence',modalOpen:false};let elapsed=0,last=0,raf=0,disposed=false;const keys=new Set<string>();let manualUntil=0;const target=new THREE.Vector3(-3.7,0,2.5);
+ let state:WorldState={baseline:false,resolved:false,proposal:false,paused:false,station:'evidence',modalOpen:false};let elapsed=0,last=0,raf=0,disposed=false;const keys=new Set<string>();let walkMode=false,nearby:Station|null=null,lastTelemetry=0;let manualUntil=0;const target=new THREE.Vector3(-3.7,0,2.5);
  const raycaster=new THREE.Raycaster();const pointer=new THREE.Vector2();let downX=0,downY=0;
  const down=(e:PointerEvent)=>{downX=e.clientX;downY=e.clientY};
  const click=(e:PointerEvent)=>{if(Math.abs(e.clientX-downX)+Math.abs(e.clientY-downY)>7)return;const rect=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);raycaster.setFromCamera(pointer,camera);const hits=raycaster.intersectObjects(Object.values(stations),true);if(hits.length){let o:THREE.Object3D|null=hits[0].object;while(o&&!o.userData.station)o=o.parent;if(o)onStation(o.userData.station)}};
- const keydown=(e:KeyboardEvent)=>{if(state.modalOpen)return;if(['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();keys.add(e.key);manualUntil=elapsed+5}};
+ const interact=()=>{if(walkMode&&nearby&&!state.paused&&!state.modalOpen)onInteract(nearby)};
+ const keydown=(e:KeyboardEvent)=>{if(state.modalOpen)return;if(e.key.toLowerCase()==='e'){e.preventDefault();if(!e.repeat)interact();return;}if(['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();keys.add(e.key);manualUntil=elapsed+5}};
  const keyup=(e:KeyboardEvent)=>keys.delete(e.key);const blur=()=>keys.clear();
  renderer.domElement.addEventListener('pointerdown',down);renderer.domElement.addEventListener('pointerup',click);renderer.domElement.addEventListener('keydown',keydown);renderer.domElement.addEventListener('keyup',keyup);renderer.domElement.addEventListener('blur',blur);
  function resize(){const w=container.clientWidth,h=container.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.zoom=Math.min(1,camera.aspect/1.3);camera.updateProjectionMatrix()}
@@ -104,16 +120,21 @@ export function createFactory(container:HTMLElement,onStation:(id:Station)=>void
    drone.position.set(4+Math.sin(t*.35)*1.2,3.3+Math.sin(t*1.8)*.15,1+Math.cos(t*.35)*1.6);rotor.rotation.y=t*25;drone.rotation.y=-t*.35;
    particles.rotation.y=t*.015;
    const manual=new THREE.Vector3((keys.has('d')||keys.has('ArrowRight')?1:0)-(keys.has('a')||keys.has('ArrowLeft')?1:0),0,(keys.has('s')||keys.has('ArrowDown')?1:0)-(keys.has('w')||keys.has('ArrowUp')?1:0));
-   const delta=manual.lengthSq()?manual.normalize():elapsed<manualUntil?new THREE.Vector3():target.clone().sub(robot.position).setY(0);const walking=delta.length()>.1;
-   if(walking){delta.normalize();robot.position.addScaledVector(delta,dt*(manual.lengthSq()?2.3:1.5));robot.position.x=THREE.MathUtils.clamp(robot.position.x,-7.6,7.6);robot.position.z=THREE.MathUtils.clamp(robot.position.z,1.7,4.6);const angle=Math.atan2(delta.x,delta.z);robot.rotation.y+=Math.atan2(Math.sin(angle-robot.rotation.y),Math.cos(angle-robot.rotation.y))*.12}
+   if(walkMode&&manual.lengthSq()){const yaw=Math.atan2(camera.position.x-controls.target.x,camera.position.z-controls.target.z);manual.applyAxisAngle(new THREE.Vector3(0,1,0),yaw)}
+   const delta=manual.lengthSq()?manual.normalize():walkMode||elapsed<manualUntil?new THREE.Vector3():target.clone().sub(robot.position).setY(0);const walking=delta.length()>.1;
+   if(walking){delta.normalize();const step=dt*(walkMode?3.4:1.5);const nx=robot.position.x+delta.x*step,nz=robot.position.z+delta.z*step;if(!blocked(nx,robot.position.z))robot.position.x=nx;if(!blocked(robot.position.x,nz))robot.position.z=nz;const angle=Math.atan2(delta.x,delta.z);robot.rotation.y+=Math.atan2(Math.sin(angle-robot.rotation.y),Math.cos(angle-robot.rotation.y))*.12}
    robotLegs.forEach((l,i)=>l.rotation.x=walking?Math.sin(t*10+i*Math.PI)*.45:0);robotArms.forEach((a,i)=>a.rotation.x=walking?Math.sin(t*10+i*Math.PI)*.3:Math.sin(t*2+i)*.08);
    head.rotation.z=Math.sin(t*1.4)*.05;head.position.y=1.3+Math.sin(t*2)*.025;torso.position.y=.75+Math.sin(t*2)*.018;const blink=Math.sin(t*1.1)>.992?.1:1;eyeL.scale.y=eyeR.scale.y=blink;halo.rotation.z=t*.2;
    if(state.proposal)robotArms[1].rotation.z=-.9+Math.sin(t*6)*.25;
   }
   beacon.material=state.resolved?glow:goldGlow;beacon.scale.y=state.resolved?1:1+Math.sin(elapsed*2)*.12;
   Object.entries(stationRings).forEach(([id,ring])=>{ring.scale.setScalar(id===state.station?1.4+Math.sin(elapsed*2)*.15:1);(ring.material as THREE.MeshBasicMaterial).opacity=id===state.station?.6:.2});
+  if(walkMode){const focus=robot.position.clone().add(new THREE.Vector3(0,1,0));const shift=focus.clone().sub(controls.target);camera.position.add(shift);controls.target.copy(focus)}
+  const points:Record<Station,[number,number]>={evidence:[-5.7,2.7],assembly:[2.5,0],dispatch:[5.4,3.3]};
+  nearby=(Object.entries(points).find(([,p])=>Math.hypot(robot.position.x-p[0],robot.position.z-p[1])<2)?.[0] as Station)||null;
+  if(ms-lastTelemetry>150){lastTelemetry=ms;onTelemetry({x:robot.position.x,z:robot.position.z,nearby})}
   controls.update();renderer.render(scene,camera);
  }
  raf=requestAnimationFrame(animate);onReady();
- return {update(next){state=next;keys.clear();const pos={evidence:[-3.7,2.7],assembly:[.7,3.5],dispatch:[6,3.7]}[next.station];target.set(pos[0],0,pos[1])},home(){camera.position.set(14,14,21);controls.target.set(0,1,0);controls.update()},dispose(){disposed=true;cancelAnimationFrame(raf);observer.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',down);renderer.domElement.removeEventListener('pointerup',click);renderer.domElement.removeEventListener('keydown',keydown);renderer.domElement.removeEventListener('keyup',keyup);renderer.domElement.removeEventListener('blur',blur);geometry.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());renderer.dispose();renderer.domElement.remove()}}
+ return {walk(enabled){walkMode=enabled;keys.clear();controls.minDistance=enabled?3:16;controls.maxDistance=enabled?12:48;controls.maxPolarAngle=enabled?1.48:1.25;controls.target.copy(enabled?robot.position.clone().add(new THREE.Vector3(0,1,0)):new THREE.Vector3(0,1,2));camera.position.copy(controls.target).add(enabled?new THREE.Vector3(0,3,6):new THREE.Vector3(20,21,29));controls.update();renderer.domElement.focus()},move(key,down){if(down)keys.add(key);else keys.delete(key)},interact,update(next){state=next;keys.clear();const pos={evidence:[-3.7,2.7],assembly:[.7,3.5],dispatch:[6,3.7]}[next.station];target.set(pos[0],0,pos[1])},home(){if(walkMode){controls.target.copy(robot.position).add(new THREE.Vector3(0,1,0));camera.position.copy(controls.target).add(new THREE.Vector3(0,3,6))}else{camera.position.set(20,21,29);controls.target.set(0,1,2)}controls.update()},dispose(){disposed=true;cancelAnimationFrame(raf);observer.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',down);renderer.domElement.removeEventListener('pointerup',click);renderer.domElement.removeEventListener('keydown',keydown);renderer.domElement.removeEventListener('keyup',keyup);renderer.domElement.removeEventListener('blur',blur);geometry.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());renderer.dispose();renderer.domElement.remove()}}
 }
