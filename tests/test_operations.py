@@ -75,3 +75,35 @@ def test_chat_scope_guard_citations_and_read_only(setup,monkeypatch,allow,citati
  assert client.post(url,headers=HEAD,json=body).json()==after
  assert TestClient(main.app).post(url,headers=HEAD,json=body).status_code==404
  assert client.post(url,headers=HEAD,json={**body,'question':'Different query'}).status_code==409
+
+def test_tool_budget_reserves_report_and_final_turn_forces_submission(setup,monkeypatch):
+ from google import genai
+ from google.genai import types
+ client,c=setup;seen=[]
+ class Models:
+  async def generate_content(self,**kw):
+   seen.append(kw['config'].response_schema)
+   if len(seen)<6:
+    name,args='read_document',{'artifact_id':'E1'}
+   else:
+    report={'summary':'Budget-bounded draft','findings':[{'finding':'Complaint read','sources':['E1'],'proposed_check':'Review source'}],'unresolved':['Physical checks pending'],'hypotheses':[{'cause':cause,'assessment':'unresolved','supporting_sources':['E1'],'contradicting_sources':[],'explanation':'Insufficient evidence','next_evidence':'Inspect samples'} for cause in ['Component','Assembly']],'corrective_actions':[{'task':'Review','owner_role':'Quality','verification':'Evidence','sources':['E1']}]};return types.GenerateContentResponse(candidates=[types.Candidate(content=types.Content(role='model',parts=[types.Part(text=json.dumps(report))]))])
+   return types.GenerateContentResponse(candidates=[types.Candidate(content=types.Content(role='model',parts=[types.Part(function_call=types.FunctionCall(name=name,args=args))]))])
+ class Aio:
+  models=Models()
+  async def __aenter__(self):return self
+  async def __aexit__(self,*args):pass
+ class Client:
+  aio=Aio()
+  def __init__(self,**kw):pass
+ monkeypatch.setattr(genai,'Client',Client);monkeypatch.setenv('GOOGLE_CLOUD_PROJECT','test')
+ after=client.post(f"/api/investigations/{c['id']}/investigator",headers=HEAD,json={'request_id':str(uuid.uuid4())}).json()
+ assert after['investigator']['status']=='awaiting_review'
+ assert seen[-1]==investigator.FinalReport and after['agent_model_attempts']==6
+
+def test_new_result_blocks_stale_action_approval(setup,monkeypatch):
+ client,c=setup
+ def seed(case):
+  case.update(baseline=True,suspect_lot='CAP-17',investigator={'id':'old-run','started_at':'2026-01-01','report':{'corrective_actions':[{'task':'Review'}]},'status':'awaiting_review'})
+  case['missions']=[{'id':'m','result':{'recorded_at':'2026-01-02'}}]
+ main.store.mutate(c['id'],seed)
+ assert mission_post(client,c,'approve_actions').status_code==422
