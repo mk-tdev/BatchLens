@@ -100,6 +100,7 @@ def command(id:str,body:Command,request:Request):
                 case['added_clear_slip']=True
                 domain.event(case,'New source added','E7 · Recovered packing slip. Extraction and review still required.')
         elif body.action=='review_slip':
+            if not case['baseline']: raise HTTPException(422,'Review baseline evidence before confirming shipment mappings.')
             candidate=case['candidates'].get('E7')
             if not case['added_clear_slip'] or not candidate or candidate.get('status')=='rejected': raise HTTPException(422,'Extract the recovered slip first.')
             if body.value not in domain.BATCHES: raise HTTPException(422,'Choose a known batch identifier.')
