@@ -285,7 +285,9 @@ async def operational_chat(id:str,body:copilot.ChatRequest,request:Request):
         store.mutate(id,charge);store.reserve_model_budget()
     try:
         answer=await asyncio.wait_for(copilot.respond(read(id,request),body.question,budget),timeout=55)
-    except Exception:
+    except Exception as exc:
+        import logging
+        logging.getLogger(__name__).warning('Operational chat stopped: %s',type(exc).__name__)
         answer={'answer':'Pip could not verify an answer. Try again within the remaining case budget or inspect the original evidence. No decisions changed.','sources':[],'status':'failed'}
     def finish(case):
         check(case,request)
