@@ -93,8 +93,9 @@ class Runner:
                         c['added_clear_slip']=True;c['revision']+=1
                         domain.event(c,'Pip retrieved supplementary evidence','E7 discovered in the synthetic case archive. No relationship approved.')
                 self.mutate(reveal)
-            self.archive_result={'matches':matches,'archive':'Only E7 is searchable. E1-E6 and E8-E10 are indexed: use read_document directly. No external ERP search.'}
-            return self.archive_result
+            result={'matches':matches,'archive':'Only E7 is searchable. E1-E6 and E8-E10 are indexed: use read_document directly. No external ERP search.'}
+            if matches:self.archive_result=result
+            return result
         if name=='read_document':
             key=parsed.artifact_id;c=self.case()
             if key=='E7' and not c['added_clear_slip']: raise ValueError('Search archive to retrieve this document first')
