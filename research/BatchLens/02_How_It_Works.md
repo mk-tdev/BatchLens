@@ -64,3 +64,7 @@ Mira’s animated workbench explains how to read and review evidence. Sol’s li
 - [Firestore database administration](https://docs.cloud.google.com/firestore/native/docs/manage-databases)
 
 Exact deployed project, model, URL and verification evidence belong in `05_Deployment_and_Verification.md`.
+
+## Adaptive investigation extension
+
+The investigator now compares causes, proposes missions from fictional demo procedures, reads operator-entered synthetic results, and revises findings in a bounded follow-up run. The operations-only chat uses real Gemini with a semantic scope gate, exact case citation validation, and no mutation tools. See [Adaptive operations](11_Adaptive_Operations.md) for the workflow and current budgets.

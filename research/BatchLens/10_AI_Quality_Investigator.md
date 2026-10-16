@@ -18,7 +18,7 @@ Open **Pip / AI investigator** from the factory or a crew room, then **Let Pip i
 
 ## Limits and recovery
 
-Each run allows at most 6 model turns, 14 tool actions and 95 seconds. Two runs are available per case, with at most 12 investigator model calls plus the existing 8 image-extraction attempts. Every real model call shares the existing 100-attempt daily project budget. These are usage limits, not a monetary spending cap. No new services, roles or credentials are required.
+Each run allows at most 6 model turns, 24 tool actions and 95 seconds. Two runs are available per case, with at most 12 investigator model calls plus the existing 8 image-extraction attempts. Every real model call shares the existing 100-attempt daily project budget. These are usage limits, not a monetary spending cap. No new services, roles or credentials are required.
 
 A failed or timed-out run retains partial journal entries and pending readings. It does not approve any decisions. Interrupted leases expire; the operator can inspect partial results or use the remaining follow-up run. Requests are deduplicated by run ID. Case ownership and expiry apply to the journal and sources.
 
@@ -41,3 +41,5 @@ A run can stop early at its time or tool budget. In that case show the incomplet
 A fresh live synthetic case completed with Gemini 3.5 Flash-Lite. Gemini selected 12 tool actions: evidence index, reads of E1–E6, archive search (`Penang East S4 packing slip batch`), E7 read, traces of CAP-17 and CAP-18, and findings submission. The run produced four cited findings and an open question about whether dimensional exceptions cause functional leakage. E2/E3/E6/E7 readings used real Gemini.
 
 Before operator review, the baseline and S4 mapping remained unapproved. Verification then used the normal review screens to inspect original E2/E3/E4/E5/E7, confirm the baseline and S4 relationship, save a 1,500-unit proposal and download HTML. The export included the frozen AI draft with its advisory label. Reload retained the journal, findings and approved case state. The final deployed revision is `batchlens-00005-vq2`, built from `a2aa4f8`; the live inference run occurred on `batchlens-00004-wsw`, followed by journal-layout and approval-gate refinements validated with 14 backend tests and a production build. No production accuracy or physical inspection claim is made.
+
+The adaptive operations release adds procedure, mission, result-reading and scope-comparison tools. See [the adaptive operations guide](11_Adaptive_Operations.md) for current behavior and budgets.

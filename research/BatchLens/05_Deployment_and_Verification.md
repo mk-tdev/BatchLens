@@ -14,7 +14,7 @@ BatchLens is publicly deployed on Google Cloud Run. The browser factory-story fl
 - Runtime: `batchlens-runtime`; model inference permissions and conditional access to the BatchLens database.
 - Builder: `batchlens-builder`; write access to BatchLens’s image repository, read access to its build source bucket, and build logging.
 - Capacity: minimum zero and maximum two instances, one CPU, 512 MiB memory, concurrency 20.
-- Model-call ceiling: 100/day across cases; eight image scans plus twelve investigator model calls per case. These are usage controls, not a monetary cap.
+- Model-call ceiling: 100/day across cases; eight image scans, twelve investigator calls and up to twelve chat model calls per case. These are usage controls, not a monetary cap.
 - Case access expires after 24 hours. Firestore TTL on `batchlens_cases.expires_at` is ACTIVE for eventual cleanup.
 
 A separate project was attempted but Google rejected creation because the account project quota was exhausted. The owner then approved a separate service and database in the existing project, together with the scoped permissions and public prototype access.
@@ -22,11 +22,11 @@ A separate project was attempted but Google rejected creation because the accoun
 ## Verification record
 
 - Local production frontend build: passed.
-- Local backend suite: 10 passed, including Cloud Run refusal to use authored mode when live configuration is missing.
+- Local backend suite: 22 passed, including Cloud Run refusal to use authored mode when live configuration is missing.
 - Dedicated service accounts, image repository, build bucket and named Firestore database: created.
 - Cloud build `17d1db4d-92f6-4e2a-b2c6-ef0a585762c9`: SUCCESS.
-- Cloud Run revision `batchlens-00005-vq2`: serving 100% of traffic (17 October Gemini investigator update).
-- Image: `asia-southeast1-docker.pkg.dev/yourstorieslive-i18n/batchlens/app:20261015154027`.
+- Cloud Run revision `batchlens-00014-w42`: serving 100% of traffic after the adaptive Gemini and assessment-summary updates on 17 October.
+- Image: `asia-southeast1-docker.pkg.dev/yourstorieslive-i18n/batchlens/app:ops-aa56cb7`.
 - Hosted URL: https://batchlens-hk3hxwi5na-as.a.run.app/
 - Hosted API workflow: PASSED at 2026-10-15 15:43 UTC (23:43 Singapore). E2 → B101; E3 → CAP-17; unreadable E6 → null; recovered E7 → B104. All four responses came from Gemini, with response IDs and usage metadata.
 - Extraction alone left scope unchanged; human confirmations produced 1,500 included units, zero unresolved, and 500 outside the recorded connection. HTML and CSV exports and saved-case reload passed.
@@ -50,4 +50,4 @@ Google’s [model lifecycle page](https://docs.cloud.google.com/gemini-enterpris
 
 The hosted prototype uses a trial-funded billing account. It may become unavailable when its trial or credits end; verify availability through the evaluation period. Keep the account on its existing trial configuration unless the owner explicitly approves a billing change. Private billing balances and account evidence are intentionally kept out of this public repository.
 
-An account-wide early-warning budget is configured. Budget alerts are not spending caps. Cloud Run is configured for zero minimum and two maximum instances; real model attempts are limited to 100 per day and eight image scans plus twelve investigator model calls per case. These usage controls do not guarantee a monetary ceiling.
+An account-wide early-warning budget is configured. Budget alerts are not spending caps. Cloud Run is configured for zero minimum and two maximum instances; real model attempts are limited to 100 per day and eight image scans, twelve investigator calls and up to twelve chat model calls per case. These usage controls do not guarantee a monetary ceiling.

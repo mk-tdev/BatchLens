@@ -1,0 +1,186 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>BatchLens inspection proposal</title><style>body{font:15px system-ui;color:#233b32;max-width:1050px;margin:60px auto;padding:30px}h1{font-size:36px}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #ddd;padding:14px;text-align:left}.notice{padding:18px;background:#f2f4ec}@media print{body{margin:0}}</style><h1>BatchLens inspection proposal</h1><p class="notice">Synthetic case · Requires quality review. Shared exposure does not prove a defect. No recorded connection does not certify safety.</p><p>Frozen revision 15 · Engine 1.0.0 · 2026-10-16T23:32:26.523863+00:00</p><h2>1,500 units proposed for inspection</h2><p>Includes connected and unresolved shipment lines. Suspect lot: CAP-17.</p><table><tr><th>Shipment</th><th>Units</th><th>Batch</th><th>Status</th><th>Reason</th><th>Sources</th></tr><tr><td>S1</td><td>600</td><td>B101</td><td>included</td><td>S1 → B101 → CAP-17. Confirmed shared component exposure; not proof of a defect.</td><td>E3, E4, E5</td></tr><tr><td>S2</td><td>400</td><td>B102</td><td>included</td><td>S2 → B102 → CAP-17. Confirmed shared component exposure; not proof of a defect.</td><td>E3, E4, E5</td></tr><tr><td>S3</td><td>500</td><td>B103</td><td>outside</td><td>B103 uses CAP-18. No recorded connection to CAP-17 within this case; this is not a safety determination.</td><td>E4, E5</td></tr><tr><td>S4</td><td>500</td><td>B104</td><td>included</td><td>S4 → B104 → CAP-17. Confirmed shared component exposure; not proof of a defect.</td><td>E3, E4, E7</td></tr></table><h2>Reviewer note</h2><p>Synthetic demonstration: original B101 / CAP-17 sources and S4 → B104 mapping reviewed. R1 records 2 of 5 fictional leaking assemblies; Gemini reassessed the hypotheses. Sample evidence is not a lot-wide defect verdict. Inspection scope is 1,500 connected units with zero unresolved; no stock release or physical action authorized. Draft findings and workload scenarios reflect the investigation-time state before the later S4 approval.</p><h2>Pip’s AI draft at handover</h2><p>AI recommendations, not approved physical actions. Reviewer approval applies to the saved scope.</p><p>Investigation into a customer complaint regarding water escaping around a reusable bottle cap (E1). The returned bottle label links to batch B101, which uses component lot CAP-17 (E2, E4). Supplier inspection records show dimensional checks for the cap delivery (E3). Shipment S4 has a recovered packing slip E7 identifying batch B104, also connected to CAP-17 (E4, E5). Since review_state.S4 is null, the E7 mapping is a candidate awaiting approval, never resolved or confirmed. Synthetic seal check R1 (result id R1) supports further investigation but does not prove a lot-wide defect. No root cause is proven by shared exposure or a small sample.</p><ul><li><strong>A customer reports water escaping around the bottle cap when turned on its side.</strong><p>Proposed check: Inspect returned product sample seals and verify label details.</p><p>Sources: E1, E2</p></li><li><strong>Finished batches B101, B102, and B104 are linked to component lot CAP-17.</strong><p>Proposed check: Verify component lot traceability across all production records.</p><p>Sources: E4</p></li><li><strong>Shipment S4 batch identifier was recovered via E7 as B104, but review_state.S4 is null; the E7 mapping is a candidate awaiting approval, never resolved or confirmed.</strong><p>Proposed check: Review and approve the S4 batch mapping.</p><p>Sources: E5, E6, E7</p></li><li><strong>Synthetic demo result R1 (result ID R1) tested 5 fictional CAP-17 assemblies, finding 2 leaking. Observation states: &quot;Synthetic demonstration only: five fictional CAP-17 cap-and-bottle assemblies were represented in a controlled seal-check record; two were marked leaking. No real physical test was performed. This supports further seal investigation but does not distinguish cap dimensions from assembly torque, and does not prove the whole lot defective.&quot;</strong><p>Proposed check: Execute real physical testing under authorized procedures.</p><p>Sources: R1</p></li></ul><h3>Open questions</h3><ul><li>Physical torque measurements are missing as E9 only logs capper setpoints.</li><li>Transport sensor readings and post-delivery inspection records are missing.</li><li>S4 batch mapping requires formal human review approval since review_state.S4 is null, meaning the E7 mapping is a candidate awaiting approval, never resolved or confirmed.</li></ul><h3>Cause comparison</h3><pre>[
+  {
+    &quot;cause&quot;: &quot;Component defect&quot;,
+    &quot;assessment&quot;: &quot;supported&quot;,
+    &quot;supporting_sources&quot;: [
+      &quot;E1&quot;,
+      &quot;E3&quot;,
+      &quot;E4&quot;,
+      &quot;R1&quot;
+    ],
+    &quot;contradicting_sources&quot;: [],
+    &quot;explanation&quot;: &quot;Supplier inspection records (E3), component lot links (E4), and synthetic demo test result R1 (result ID R1) showing 2 out of 5 leaking samples support potential component issues leading to leakage (E1), but no sample tests prove an entire lot defect.&quot;,
+    &quot;next_evidence&quot;: &quot;Perform thorough physical seal inspections for component lot CAP-17.&quot;
+  },
+  {
+    &quot;cause&quot;: &quot;Assembly variation&quot;,
+    &quot;assessment&quot;: &quot;unresolved&quot;,
+    &quot;supporting_sources&quot;: [
+      &quot;E9&quot;
+    ],
+    &quot;contradicting_sources&quot;: [],
+    &quot;explanation&quot;: &quot;Assembly records show capper setpoints (E9), but lack measured closure-torque readings and calibration data.&quot;,
+    &quot;next_evidence&quot;: &quot;Obtain physical closure torque measurements from assembly.&quot;
+  },
+  {
+    &quot;cause&quot;: &quot;Handling damage&quot;,
+    &quot;assessment&quot;: &quot;unresolved&quot;,
+    &quot;supporting_sources&quot;: [
+      &quot;E10&quot;
+    ],
+    &quot;contradicting_sources&quot;: [],
+    &quot;explanation&quot;: &quot;Handling record E10 notes that S4 handling checklist is unavailable and post-delivery inspection records are not supplied, leaving handling damage plausible.&quot;,
+    &quot;next_evidence&quot;: &quot;Review transport logs and post-delivery condition reports.&quot;
+  }
+]</pre><h3>Changes after operator results</h3><p>Results available for reassessment: R1. Component defect: unresolved → supported; Assembly variation: remains unresolved; Handling damage: remains unresolved. These are changes in Gemini’s hypotheses, not proof of root cause.</p><h3>Corrective-action drafts</h3><pre>[
+  {
+    &quot;task&quot;: &quot;Perform sample seal inspections for component lot CAP-17 following procedural guidelines.&quot;,
+    &quot;owner_role&quot;: &quot;Quality Inspector&quot;,
+    &quot;verification&quot;: &quot;Record sample identifiers, tested count, and leaking count with supervisor sign-off.&quot;,
+    &quot;sources&quot;: [
+      &quot;E3&quot;,
+      &quot;E4&quot;,
+      &quot;R1&quot;
+    ]
+  },
+  {
+    &quot;task&quot;: &quot;Review and approve pending shipment batch mappings for S4.&quot;,
+    &quot;owner_role&quot;: &quot;Shipping Supervisor&quot;,
+    &quot;verification&quot;: &quot;Verify packing slip data against warehouse logs.&quot;,
+    &quot;sources&quot;: [
+      &quot;E5&quot;,
+      &quot;E6&quot;,
+      &quot;E7&quot;
+    ]
+  }
+]</pre><h3>Mission records (synthetic)</h3><pre>[
+  {
+    &quot;id&quot;: &quot;afa2e6aa-5128-4874-ad85-412018b8d644&quot;,
+    &quot;procedure_id&quot;: &quot;seal_check&quot;,
+    &quot;reason&quot;: &quot;Inspect CAP-17 sample seals to verify supplier dimensional findings and investigate potential cap defect.&quot;,
+    &quot;lot&quot;: &quot;CAP-17&quot;,
+    &quot;title&quot;: &quot;Compare cap seals at Mira\u2019s bench&quot;,
+    &quot;station&quot;: &quot;evidence&quot;,
+    &quot;source&quot;: &quot;E8&quot;,
+    &quot;steps&quot;: [
+      &quot;Use the labelled synthetic inspection record or a supervisor-authorized real procedure outside this demo.&quot;,
+      &quot;Record sample identifiers, tested count and leaking count for one component lot.&quot;,
+      &quot;Record the method and observations. A sample result does not certify an entire lot.&quot;
+    ],
+    &quot;max_samples&quot;: 20,
+    &quot;status&quot;: &quot;completed&quot;,
+    &quot;created_at&quot;: &quot;2026-10-16T23:26:51.846732+00:00&quot;,
+    &quot;result&quot;: {
+      &quot;id&quot;: &quot;R1&quot;,
+      &quot;recorded_at&quot;: &quot;2026-10-16T23:27:38.597333+00:00&quot;,
+      &quot;origin&quot;: &quot;operator-entered synthetic demo result&quot;,
+      &quot;procedure_id&quot;: &quot;seal_check&quot;,
+      &quot;lot&quot;: &quot;CAP-17&quot;,
+      &quot;sample_ids&quot;: &quot;DEMO-CAP17-01 through DEMO-CAP17-05&quot;,
+      &quot;tested&quot;: 5,
+      &quot;failed&quot;: 2,
+      &quot;outcome&quot;: &quot;supports&quot;,
+      &quot;observation&quot;: &quot;Synthetic demonstration only: five fictional CAP-17 cap-and-bottle assemblies were represented in a controlled seal-check record; two were marked leaking. No real physical test was performed. This supports further seal investigation but does not distinguish cap dimensions from assembly torque, and does not prove the whole lot defective.&quot;
+    },
+    &quot;approved_at&quot;: &quot;2026-10-16T23:27:16.846977+00:00&quot;,
+    &quot;approval_note&quot;: &quot;Operator approved this fictional procedure for the synthetic demo mission.&quot;
+  }
+]</pre><h3>Action review</h3><pre>{
+  &quot;run_id&quot;: &quot;f3a29f80-d24f-4800-9cde-ac538ee191ed&quot;,
+  &quot;at&quot;: &quot;2026-10-16T23:31:03.731327+00:00&quot;,
+  &quot;note&quot;: &quot;Operator reviewed corrective-action drafts for synthetic case handover. No external tasks dispatched.&quot;,
+  &quot;status&quot;: &quot;approved_for_handover&quot;
+}</pre><h3>Illustrative scope comparison</h3><pre>{
+  &quot;hypothetical&quot;: true,
+  &quot;lot&quot;: &quot;CAP-17&quot;,
+  &quot;source_ids&quot;: [
+    &quot;E4&quot;,
+    &quot;E5&quot;
+  ],
+  &quot;assumption&quot;: &quot;0.5 minutes per unit, illustrative operator/model input; not measured productivity.&quot;,
+  &quot;options&quot;: [
+    {
+      &quot;name&quot;: &quot;Connected units only&quot;,
+      &quot;units&quot;: 1000,
+      &quot;unresolved_excluded&quot;: 500,
+      &quot;minutes&quot;: 500.0,
+      &quot;notice&quot;: &quot;Incomplete while unresolved units remain. This cannot be selected as the conservative proposal.&quot;
+    },
+    {
+      &quot;name&quot;: &quot;Connected plus unresolved&quot;,
+      &quot;units&quot;: 1500,
+      &quot;unresolved_excluded&quot;: 0,
+      &quot;minutes&quot;: 750.0,
+      &quot;notice&quot;: &quot;Existing conservative inspection policy; requires human review.&quot;
+    },
+    {
+      &quot;name&quot;: &quot;All case shipments&quot;,
+      &quot;units&quot;: 2000,
+      &quot;unresolved_excluded&quot;: 0,
+      &quot;minutes&quot;: 1000.0,
+      &quot;notice&quot;: &quot;Broader workload comparison only. No release or containment order is executed.&quot;
+    }
+  ],
+  &quot;scope&quot;: {
+    &quot;engine_version&quot;: &quot;1.0.0&quot;,
+    &quot;revision&quot;: 11,
+    &quot;rows&quot;: [
+      {
+        &quot;id&quot;: &quot;S1&quot;,
+        &quot;destination&quot;: &quot;Singapore Central&quot;,
+        &quot;units&quot;: 600,
+        &quot;batch&quot;: &quot;B101&quot;,
+        &quot;category&quot;: &quot;included&quot;,
+        &quot;reason&quot;: &quot;S1 \u2192 B101 \u2192 CAP-17. Confirmed shared component exposure; not proof of a defect.&quot;,
+        &quot;evidence&quot;: [
+          &quot;E3&quot;,
+          &quot;E4&quot;,
+          &quot;E5&quot;
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;S2&quot;,
+        &quot;destination&quot;: &quot;Johor Bahru North&quot;,
+        &quot;units&quot;: 400,
+        &quot;batch&quot;: &quot;B102&quot;,
+        &quot;category&quot;: &quot;included&quot;,
+        &quot;reason&quot;: &quot;S2 \u2192 B102 \u2192 CAP-17. Confirmed shared component exposure; not proof of a defect.&quot;,
+        &quot;evidence&quot;: [
+          &quot;E3&quot;,
+          &quot;E4&quot;,
+          &quot;E5&quot;
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;S3&quot;,
+        &quot;destination&quot;: &quot;Kuala Lumpur West&quot;,
+        &quot;units&quot;: 500,
+        &quot;batch&quot;: &quot;B103&quot;,
+        &quot;category&quot;: &quot;outside&quot;,
+        &quot;reason&quot;: &quot;B103 uses CAP-18. No recorded connection to CAP-17 within this case; this is not a safety determination.&quot;,
+        &quot;evidence&quot;: [
+          &quot;E4&quot;,
+          &quot;E5&quot;
+        ]
+      },
+      {
+        &quot;id&quot;: &quot;S4&quot;,
+        &quot;destination&quot;: &quot;Penang East&quot;,
+        &quot;units&quot;: 500,
+        &quot;batch&quot;: null,
+        &quot;category&quot;: &quot;unresolved&quot;,
+        &quot;reason&quot;: &quot;No confirmed batch identifier. Keep this shipment in the conservative inspection proposal.&quot;,
+        &quot;evidence&quot;: []
+      }
+    ],
+    &quot;totals&quot;: {
+      &quot;included&quot;: 1000,
+      &quot;unresolved&quot;: 500,
+      &quot;outside&quot;: 500,
+      &quot;unreviewed&quot;: 0,
+      &quot;total&quot;: 2000,
+      &quot;inspection&quot;: 1500
+    }
+  }
+}</pre><h2>Source manifest</h2><ul><li>E1 · Customer complaint</li><li>E2 · Product label</li><li>E3 · Supplier inspection</li><li>E4 · Production records</li><li>E5 · Shipment ledger</li><li>E6 · Original packing slip</li><li>E8 · Demo inspection procedures</li><li>E9 · Assembly shift record</li><li>E10 · Handling record</li><li>E7 · Recovered packing slip</li></ul><h2>Extraction excerpts</h2><ul><li>E2: B101 — Gemini extraction · needs review</li><li>E3: COMPONENT LOT
+CAP-17 — Gemini extraction · needs review</li><li>E6: S4 — Gemini extraction · needs review</li><li>E7: B104 — Gemini extraction · needs review</li></ul><p>Source images are available in the investigation until its 24-hour expiry. This file preserves the reviewed scope and excerpts.</p></html>

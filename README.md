@@ -160,3 +160,9 @@ The repository is public for teammates and hackathon judges. Anyone can clone it
 - [Original build plan](BUILD_PLAN.md) — design intent and historical scope, not a claim that every planned feature shipped.
 
 The logo, SVG characters, factory geometry and evidence artifacts were authored for BatchLens. The illustrative bottle photograph is AI-generated and is not used as extraction evidence. Third-party dependencies retain their respective licenses. No project license has been selected yet.
+
+## Adaptive operations
+
+Pip now compares possible causes, proposes procedure-backed inspection missions, and reassesses operator-entered synthetic results. Open the investigator journal to use **Causes**, **Missions**, **Scope lab**, **Handover**, and **Ask Pip**. Operational chat uses real Gemini with a scope gate and case citations; it has no decision-changing tools.
+
+See [Adaptive operations and demo guide](research/BatchLens/11_Adaptive_Operations.md) for the full workflow, authority boundaries, fictional procedure disclosures and usage limits. The shared daily limit remains 100 model attempts. Chat permits six questions per case, with up to two model calls each.
