@@ -35,3 +35,9 @@ Implementation follows the [Google Gen AI SDK's manual function-calling pattern]
 5. Use the operator checkpoints to approve the baseline and S4 connection, then save the reviewed handover and export its frozen AI draft alongside the deterministic scope.
 
 A run can stop early at its time or tool budget. In that case show the incomplete status and retained evidence rather than presenting it as a completed autonomous investigation.
+
+## Live verification: 17 October 2026
+
+A fresh live synthetic case completed with Gemini 3.5 Flash-Lite. Gemini selected 12 tool actions: evidence index, reads of E1–E6, archive search (`Penang East S4 packing slip batch`), E7 read, traces of CAP-17 and CAP-18, and findings submission. The run produced four cited findings and an open question about whether dimensional exceptions cause functional leakage. E2/E3/E6/E7 readings used real Gemini.
+
+Before operator review, the baseline and S4 mapping remained unapproved. Verification then used the normal review screens to inspect original E2/E3/E4/E5/E7, confirm the baseline and S4 relationship, save a 1,500-unit proposal and download HTML. The export included the frozen AI draft with its advisory label. Reload retained the journal, findings and approved case state. The final deployed revision is `batchlens-00005-vq2`, built from `a2aa4f8`; the live inference run occurred on `batchlens-00004-wsw`, followed by journal-layout and approval-gate refinements validated with 14 backend tests and a production build. No production accuracy or physical inspection claim is made.

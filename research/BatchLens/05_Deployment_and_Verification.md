@@ -25,7 +25,7 @@ A separate project was attempted but Google rejected creation because the accoun
 - Local backend suite: 10 passed, including Cloud Run refusal to use authored mode when live configuration is missing.
 - Dedicated service accounts, image repository, build bucket and named Firestore database: created.
 - Cloud build `17d1db4d-92f6-4e2a-b2c6-ef0a585762c9`: SUCCESS.
-- Cloud Run revision `batchlens-00003-6f2`: serving 100% of traffic (17 October factory-floor update).
+- Cloud Run revision `batchlens-00005-vq2`: serving 100% of traffic (17 October Gemini investigator update).
 - Image: `asia-southeast1-docker.pkg.dev/yourstorieslive-i18n/batchlens/app:20261015154027`.
 - Hosted URL: https://batchlens-hk3hxwi5na-as.a.run.app/
 - Hosted API workflow: PASSED at 2026-10-15 15:43 UTC (23:43 Singapore). E2 → B101; E3 → CAP-17; unreadable E6 → null; recovered E7 → B104. All four responses came from Gemini, with response IDs and usage metadata.
