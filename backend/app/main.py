@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request, Response, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
-from . import domain, ai
+from . import domain, ai, investigator
 from .storage import make_store
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -84,6 +84,7 @@ def command(id:str,body:Command,request:Request):
         if prior:
             if prior['hash']!=fingerprint: raise HTTPException(409,'Request ID already used with a different body.')
             return prior['result']
+        if investigator.active(case): raise HTTPException(409,'Pip is investigating. Wait for the journal to finish before reviewing decisions.')
         if body.expected_revision!=case['revision']: raise HTTPException(409,{'message':'The case changed in another tab. Your view has been refreshed.','state':domain.public(case,ai.mode())})
         if len(case['requests'])>=24: raise HTTPException(429,'Case action limit reached. Start a new case.')
         if body.action=='confirm_baseline':
@@ -130,7 +131,7 @@ def command(id:str,body:Command,request:Request):
             if not case['baseline']: raise HTTPException(422,'Review baseline evidence before preparing a proposal.')
             if len(case['proposals'])>=3: raise HTTPException(429,'Three proposal snapshots are available per demo case.')
             snap=domain.scope(case)
-            proposal={'id':str(uuid.uuid4()),'created_at':domain.now(),'revision':case['revision'],'scope':snap,'note':body.note,'suspect_lot':case['suspect_lot'],'sources':[a for a in domain.ARTIFACTS if a['id']!='E7' or case['added_clear_slip']],'candidate_snapshot':json.loads(json.dumps(case['candidates']))}
+            proposal={'id':str(uuid.uuid4()),'created_at':domain.now(),'revision':case['revision'],'scope':snap,'note':body.note,'suspect_lot':case['suspect_lot'],'sources':[a for a in domain.ARTIFACTS if a['id']!='E7' or case['added_clear_slip']],'candidate_snapshot':json.loads(json.dumps(case['candidates'])),'investigator_report':json.loads(json.dumps((case.get('investigator') or {}).get('report')))}
             case['proposals'].append(proposal)
             domain.event(case,'Inspection proposal saved',f"{snap['totals']['inspection']:,} units · reviewed revision {case['revision']}")
         case['revision']+=1
@@ -144,6 +145,7 @@ async def extract(id:str,body:ExtractionRequest,request:Request):
     job_id=body.request_id
     def reserve(case):
         check(case,request)
+        if investigator.active(case): raise HTTPException(409,'Pip is reading the evidence. Wait for the investigation to finish.')
         if body.artifact_id=='E7' and not case['added_clear_slip']: raise HTTPException(422,'Add the recovered slip first.')
         prior=case['jobs'].get(job_id)
         if prior:
@@ -181,6 +183,45 @@ async def extract(id:str,body:ExtractionRequest,request:Request):
         return result
     return store.mutate(id,commit)
 
+class InvestigatorRequest(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    request_id: str=Field(min_length=8,max_length=80)
+
+@app.post('/api/investigations/{id}/investigator')
+async def investigate(id:str,body:InvestigatorRequest,request:Request):
+    read(id,request)
+    if ai.mode()!='gemini': raise HTTPException(503,'Pip requires real Gemini. Configure Vertex AI to run an investigation; no authored agent fallback is used.')
+    def reserve(case):
+        check(case,request)
+        if body.request_id in case.get('agent_run_ids',[]):
+            return False
+        if investigator.active(case): raise HTTPException(409,'Pip is already investigating this case.')
+        if any(j['status']=='running' and j['lease']>time.time() for j in case['jobs'].values()): raise HTTPException(409,'Wait for the current source scan.')
+        if len(case.get('agent_run_ids',[]))>=2: raise HTTPException(429,'Two investigator runs are available per case.')
+        if case.get('investigator'): case.setdefault('past_investigations',[]).append(case['investigator'])
+        case.setdefault('agent_run_ids',[]).append(body.request_id)
+        case['investigator']={'id':body.request_id,'status':'running','lease':time.time()+110,'started_at':domain.now(),'journal':[],'report':None,'model':os.environ.get('MODEL_ID'),'provider':'gemini'}
+        case['revision']+=1
+        return True
+    if not store.mutate(id,reserve): return domain.public(read(id,request),ai.mode())
+    runner=investigator.Runner(store,id,body.request_id,lambda c:check(c,request))
+    status,message='awaiting_review','Findings ready for human review.'
+    try:
+        await asyncio.wait_for(runner.run(),timeout=95)
+    except Exception as exc:
+        status='incomplete';message='Investigation stopped before completion. Partial tool results remain available; no decisions were approved.'
+        # Do not expose provider exception bodies or credentials in client responses.
+        import logging
+        logging.getLogger(__name__).warning('Investigator stopped: %s',type(exc).__name__)
+    def finish(case):
+        check(case,request)
+        if case.get('investigator',{}).get('id')==body.request_id:
+            case['investigator'].update(status=status,message=message,finished_at=domain.now(),lease=0)
+            case['revision']+=1
+            domain.event(case,'Pip investigation '+status.replace('_',' '),message)
+        return domain.public(case,ai.mode())
+    return store.mutate(id,finish)
+
 @app.get('/api/investigations/{id}/proposals/{proposal_id}/export')
 def export(id:str,proposal_id:str,request:Request,format:Literal['html','csv']='html'):
     case=read(id,request); proposal=next((p for p in case['proposals'] if p['id']==proposal_id),None)
@@ -197,7 +238,12 @@ def export(id:str,proposal_id:str,request:Request,format:Literal['html','csv']='
     trs=''.join(f"<tr><td>{e(r['id'])}</td><td>{r['units']}</td><td>{e(r['batch'] or 'Unresolved')}</td><td>{e(r['category'])}</td><td>{e(r['reason'])}</td><td>{e(', '.join(r['evidence']))}</td></tr>" for r in rows)
     sources=''.join(f"<li>{e(a['id'])} · {e(a['name'])}</li>" for a in proposal['sources'])
     quotes=''.join(f"<li>{e(k)}: {e(v.get('quote',''))} — {e(v['label'])}</li>" for k,v in proposal['candidate_snapshot'].items())
-    content=f'''<!doctype html><html lang="en"><meta charset="utf-8"><title>BatchLens inspection proposal</title><style>body{{font:15px system-ui;color:#233b32;max-width:1050px;margin:60px auto;padding:30px}}h1{{font-size:36px}}table{{border-collapse:collapse;width:100%}}td,th{{border-bottom:1px solid #ddd;padding:14px;text-align:left}}.notice{{padding:18px;background:#f2f4ec}}@media print{{body{{margin:0}}}}</style><h1>BatchLens inspection proposal</h1><p class="notice">Synthetic case · Requires quality review. Shared exposure does not prove a defect. No recorded connection does not certify safety.</p><p>Frozen revision {proposal['revision']} · Engine 1.0.0 · {e(proposal['created_at'])}</p><h2>{proposal['scope']['totals']['inspection']:,} units proposed for inspection</h2><p>Includes connected and unresolved shipment lines. Suspect lot: {e(proposal['suspect_lot'])}.</p><table><tr><th>Shipment</th><th>Units</th><th>Batch</th><th>Status</th><th>Reason</th><th>Sources</th></tr>{trs}</table><h2>Reviewer note</h2><p>{e(proposal['note'] or 'No additional note.')}</p><h2>Source manifest</h2><ul>{sources}</ul><h2>Extraction excerpts</h2><ul>{quotes}</ul><p>Source images are available in the investigation until its 24-hour expiry. This file preserves the reviewed scope and excerpts.</p></html>'''
+    report=proposal.get('investigator_report')
+    agent_html=''
+    if report:
+        items=''.join('<li><strong>'+e(f['finding'])+'</strong><p>Proposed check: '+e(f['proposed_check'])+'</p><p>Sources: '+e(', '.join(f['sources']))+'</p></li>' for f in report['findings'])
+        agent_html='<h2>Pip’s AI draft at handover</h2><p>AI recommendations, not approved physical actions. Reviewer approval applies to the saved scope.</p><p>'+e(report['summary'])+'</p><ul>'+items+'</ul><h3>Open questions</h3><ul>'+''.join('<li>'+e(q)+'</li>' for q in report['unresolved'])+'</ul>'
+    content=f'''<!doctype html><html lang="en"><meta charset="utf-8"><title>BatchLens inspection proposal</title><style>body{{font:15px system-ui;color:#233b32;max-width:1050px;margin:60px auto;padding:30px}}h1{{font-size:36px}}table{{border-collapse:collapse;width:100%}}td,th{{border-bottom:1px solid #ddd;padding:14px;text-align:left}}.notice{{padding:18px;background:#f2f4ec}}@media print{{body{{margin:0}}}}</style><h1>BatchLens inspection proposal</h1><p class="notice">Synthetic case · Requires quality review. Shared exposure does not prove a defect. No recorded connection does not certify safety.</p><p>Frozen revision {proposal['revision']} · Engine 1.0.0 · {e(proposal['created_at'])}</p><h2>{proposal['scope']['totals']['inspection']:,} units proposed for inspection</h2><p>Includes connected and unresolved shipment lines. Suspect lot: {e(proposal['suspect_lot'])}.</p><table><tr><th>Shipment</th><th>Units</th><th>Batch</th><th>Status</th><th>Reason</th><th>Sources</th></tr>{trs}</table><h2>Reviewer note</h2><p>{e(proposal['note'] or 'No additional note.')}</p>{agent_html}<h2>Source manifest</h2><ul>{sources}</ul><h2>Extraction excerpts</h2><ul>{quotes}</ul><p>Source images are available in the investigation until its 24-hour expiry. This file preserves the reviewed scope and excerpts.</p></html>'''
     return HTMLResponse(content,headers={'Content-Disposition':'attachment; filename="batchlens-inspection.html"'})
 
 DIST=ROOT/'dist'

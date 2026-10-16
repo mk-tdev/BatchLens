@@ -68,5 +68,6 @@ def event(case,title,detail):
 def public(case, mode):
     return {k:case[k] for k in ['id','revision','created_at','baseline','suspect_lot','resolved_batch','added_clear_slip','candidates','history','proposals','model_attempts']} | {
         'scope':scope(case), 'artifacts':[a for a in ARTIFACTS if a['id']!='E7' or case['added_clear_slip']],
+        'investigator':case.get('investigator'), 'agent_model_attempts':case.get('agent_model_attempts',0),
         'batches':BATCHES,'mode':mode,'scenario_version':'bottles_v1',
     }
