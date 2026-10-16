@@ -14,7 +14,7 @@ BatchLens is publicly deployed on Google Cloud Run. The browser factory-story fl
 - Runtime: `batchlens-runtime`; model inference permissions and conditional access to the BatchLens database.
 - Builder: `batchlens-builder`; write access to BatchLens’s image repository, read access to its build source bucket, and build logging.
 - Capacity: minimum zero and maximum two instances, one CPU, 512 MiB memory, concurrency 20.
-- Model-call ceiling: 100/day across cases; eight attempts per case. These are usage controls, not a monetary cap.
+- Model-call ceiling: 100/day across cases; eight image scans plus twelve investigator model calls per case. These are usage controls, not a monetary cap.
 - Case access expires after 24 hours. Firestore TTL on `batchlens_cases.expires_at` is ACTIVE for eventual cleanup.
 
 A separate project was attempted but Google rejected creation because the account project quota was exhausted. The owner then approved a separate service and database in the existing project, together with the scoped permissions and public prototype access.
@@ -50,4 +50,4 @@ Google’s [model lifecycle page](https://docs.cloud.google.com/gemini-enterpris
 
 The hosted prototype uses a trial-funded billing account. It may become unavailable when its trial or credits end; verify availability through the evaluation period. Keep the account on its existing trial configuration unless the owner explicitly approves a billing change. Private billing balances and account evidence are intentionally kept out of this public repository.
 
-An account-wide early-warning budget is configured. Budget alerts are not spending caps. Cloud Run is configured for zero minimum and two maximum instances; real model attempts are limited to 100 per day and eight per case. These usage controls do not guarantee a monetary ceiling.
+An account-wide early-warning budget is configured. Budget alerts are not spending caps. Cloud Run is configured for zero minimum and two maximum instances; real model attempts are limited to 100 per day and eight image scans plus twelve investigator model calls per case. These usage controls do not guarantee a monetary ceiling.

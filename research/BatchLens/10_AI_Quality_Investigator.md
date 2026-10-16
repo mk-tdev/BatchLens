@@ -25,3 +25,13 @@ A failed or timed-out run retains partial journal entries and pending readings. 
 ## Architecture reference
 
 Implementation follows the [Google Gen AI SDK's manual function-calling pattern](https://github.com/googleapis/python-genai): explicit declarations, automatic calling disabled, model tool calls executed by a bounded server loop, function responses returned in the conversation. The visual factory, crew animation and physical inspection activity remain illustrative, not sensor telemetry or an executed real-world inspection.
+
+## Demo sequence
+
+1. Open the playable factory and Pip's investigation journal. State the leaking-cap mission and start the investigator.
+2. Show Gemini's actual tool requests and the document results as they arrive. Expand an image reading and the hypothetical trace.
+3. Show the archive search and recovered-slip candidate if Gemini selected them. Do not narrate unexecuted actions as completed.
+4. Inspect the proposed checks and source citations. Point out that the approved scope remains unchanged until review.
+5. Use the operator checkpoints to approve the baseline and S4 connection, then save the reviewed handover and export its frozen AI draft alongside the deterministic scope.
+
+A run can stop early at its time or tool budget. In that case show the incomplete status and retained evidence rather than presenting it as a completed autonomous investigation.

@@ -49,7 +49,7 @@ Inspection scope equals connected units plus unresolved units. Gemini does not p
 
 ## State and review controls
 
-Each investigation belongs to a browser via an HTTP-only ownership cookie and expires after 24 hours. Cloud Run uses a secure cookie. API commands carry a revision and request ID to detect stale views and deduplicate repeated submissions. Firestore mutations are transactional. Extraction jobs use a lease, and each case allows eight model attempts, 24 command requests and three proposal snapshots. A shared daily model-call ceiling bounds live inference usage.
+Each investigation belongs to a browser via an HTTP-only ownership cookie and expires after 24 hours. Cloud Run uses a secure cookie. API commands carry a revision and request ID to detect stale views and deduplicate repeated submissions. Firestore mutations are transactional. Extraction jobs use a lease, and each case allows eight image scans and twelve investigator model calls, 24 command requests and three proposal snapshots. A shared daily model-call ceiling bounds live inference usage.
 
 A saved proposal freezes the reviewed scope, candidate excerpts, source manifest and reviewer note. Later changes do not rewrite the previous proposal. HTML and CSV downloads remain associated with the owning case. Expiry prevents access; Firestore TTL cleanup is a separate deployment setting and is not instantaneous.
 

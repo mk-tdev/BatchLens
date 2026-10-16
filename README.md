@@ -16,6 +16,7 @@ This is a hackathon prototype using an original synthetic case, not a validated 
 
 ## What is built
 
+- A Gemini quality investigator that autonomously calls read, archive-search and trace tools, then submits cited findings for human review.
 - An explorable Three.js factory with moving crew, conveyor, forklift and drone, plus illustrated rooms for every investigation chapter.
 - Mira’s evidence workbench: original documents, Gemini extraction, source quotations, corrections and explicit reviewer confirmation.
 - Sol’s assembly schematic: component-to-batch-to-shipment trace with source-linked relationships and separate unresolved quantities.
@@ -26,6 +27,8 @@ This is a hackathon prototype using an original synthetic case, not a validated 
 Characters and dialogue are authored guides. Gemini reads evidence images; it does not generate the characters’ dialogue or autonomously approve inspection decisions.
 
 ## Try the complete story
+
+Start with **Pip / AI investigator → Let Pip investigate** to watch real Gemini choose tools and gather evidence. Inspect its journal and source citations, then use the operator checkpoints below. The agent cannot approve facts or release shipments.
 
 1. Select **Enter factory · Play as Pip**. Walk with WASD/arrows or the touch pad; drag to look. Follow the minimap to Mira and press **E** to enter **Mira’s evidence lab**. Scan the product label and supplier report, inspect the production and shipment ledgers, then confirm the baseline.
 2. Visit **Sol’s assembly line**. Component lot `CAP-17` connects to batches `B101`, `B102` and `B104`. Shipments S1 and S2 account for 1,000 connected units; S4’s 500 units remain unresolved.
@@ -85,7 +88,7 @@ flowchart LR
 
 React, TypeScript and Vite power the interface; Three.js renders the factory. FastAPI owns case access, extraction, review commands and exports. A pure trace engine computes scope from confirmed relationships, counting each shipment line once. SQLite and Firestore adapters persist investigations with revision checks and request deduplication.
 
-The bounded MVP stores one JSON document per investigation, with up to 24 review commands, three proposal snapshots and eight extraction attempts. Larger investigations need a revised storage model.
+The bounded MVP stores one JSON document per investigation, with up to 24 review commands, three proposal snapshots and eight extraction attempts plus twelve investigator model calls. Larger investigations need a revised storage model.
 
 ```text
 frontend/             React interface, factory scene, custom artwork
@@ -114,7 +117,7 @@ bash deploy/cloudrun.sh publish
 
 `setup` enables APIs and provisions service identities, scoped permissions, an image repository, build bucket, named database and TTL. `deploy` builds and deploys the container. `publish` grants public invocation. These commands change cloud resources and can incur usage charges; they are not needed for local development. Do not redeploy the shared demo without coordinating with the owner.
 
-Configured limits: minimum zero / maximum two instances, 100 model attempts per day across cases, eight attempts per case, and one concurrent extraction per case. **These are usage controls, not a monetary spending cap.** Cloud billing and credits must be managed separately. The hosted demo depends on available project credits and service access.
+Configured limits: minimum zero / maximum two instances, 100 model attempts per day across cases, eight image scans plus twelve investigator model calls per case, and one concurrent extraction per case. **These are usage controls, not a monetary spending cap.** Cloud billing and credits must be managed separately. The hosted demo depends on available project credits and service access.
 
 ## Verification
 
@@ -150,6 +153,7 @@ The repository is public for teammates and hackathon judges. Anyone can clone it
 - [Submission checklist and judge Q&A](research/BatchLens/04_Submission_Checklist_and_Judge_QA.md)
 - [Deployment and live verification](research/BatchLens/05_Deployment_and_Verification.md)
 - [Three-minute video recording script](research/BatchLens/06_Three_Minute_Demo_Script.md)
+- [AI investigator architecture and controls](research/BatchLens/10_AI_Quality_Investigator.md)
 - [Playable factory controls and template alignment](research/BatchLens/09_Playable_Factory.md)
 - [All research and organizer requirements](research/BatchLens/README.md)
 - [Asset provenance](docs/provenance.md)

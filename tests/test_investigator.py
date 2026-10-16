@@ -73,3 +73,22 @@ def test_manual_tool_loop_preserves_signatures_and_call_ids(setup,monkeypatch):
     assert seen[1][1].parts[0].thought_signature==b'signature'
     assert seen[1][2].parts[0].function_response.id=='call-a'
     assert result['agent_model_attempts']==2
+
+def test_model_budget_and_saved_ai_draft_are_bounded(setup,monkeypatch):
+    client,c=setup
+    async def run(self):
+        self.mutate(lambda case:case.update(agent_model_attempts=12))
+        with pytest.raises(ValueError,match='budget'):self.budget()
+        self.read_ids.add('E1')
+        await self.execute('submit_findings',{'summary':'<script>draft</script>','findings':[{'finding':'Draft','sources':['E1'],'proposed_check':'Review'}],'unresolved':[]})
+    monkeypatch.setattr(investigator.Runner,'run',run)
+    after=client.post(f"/api/investigations/{c['id']}/investigator",headers=HEAD,json={'request_id':str(uuid.uuid4())}).json()
+    def baseline(case):
+        case['baseline']=True;case['suspect_lot']='CAP-17'
+    main.store.mutate(c['id'],baseline)
+    saved=action(client,after,'create_proposal',note='Reviewed scope, draft still advisory').json()
+    proposal=saved['proposals'][0]
+    assert proposal['investigator_report']['summary']=='<script>draft</script>'
+    html=client.get(f"/api/investigations/{c['id']}/proposals/{proposal['id']}/export").text
+    assert '&lt;script&gt;draft&lt;/script&gt;' in html and '<script>' not in html
+    assert proposal['scope']['totals']['unresolved']==500
