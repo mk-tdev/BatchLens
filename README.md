@@ -1,48 +1,115 @@
-# BatchLens
+<p align="center">
+  <img src="frontend/public/favicon.svg" width="64" alt="BatchLens mark">
+</p>
 
-**Follow the evidence. Find the affected batches. Hand over a defensible inspection plan.**
+# BatchLens · The Night Shift
 
-BatchLens turns a manufacturing quality investigation into an interactive factory story. Walk through Northstar’s night shift with Mira, Sol and Pip, use Gemini to read source documents, trace a component lot into shipments, and approve an inspection proposal backed by original evidence.
+**An agentic quality investigator inside a playable factory.**
 
-[Live demo](https://batchlens-hk3hxwi5na-as.a.run.app/) · [Demo script](research/BatchLens/03_User_Guide_and_Demo_Script.md) · [How it works](research/BatchLens/02_How_It_Works.md)
+One leaking cap. Four shipments. A missing batch reference. BatchLens helps a quality operator follow the evidence, compare possible causes, approve useful inspection missions and hand over a traceable plan. Pip uses **real Gemini tool calling**; the operator reviews the facts and decisions.
 
-![The Northstar Night Shift factory](docs/night-shift-preview.jpg)
+**AI Builder Cup 2026** · **PixelTrendAnalytics** · **Manufacturing: Intelligent Operations & Industrial Efficiency**
 
-## Why it matters
+[**Open the live factory →**](https://batchlens-hk3hxwi5na-as.a.run.app/) · [**Pitch deck PDF**](docs/submission/BatchLens-Pitch-Deck.pdf) · [**Submission pack**](docs/submission/README.md) · [**Research**](research/BatchLens/README.md)
 
-When a quality complaint arrives, the relevant information is often scattered across product labels, supplier reports, production ledgers and shipment records. BatchLens brings those sources into one reviewable investigation. Its goal is to help a reviewer explain which shipments warrant inspection, what is still unknown, and which evidence supports each decision.
+[![BatchLens project poster: a factory story with a real AI investigator](docs/submission/BatchLens-Project-Poster.png)](docs/submission/BatchLens-Project-Poster.pdf)
 
-This is a hackathon prototype using an original synthetic case, not a validated production quality system. It does not establish defect causation or certify product safety.
+## For organizers and judges
 
-## What is built
+| Submission item | Link and status |
+| --- | --- |
+| Working prototype | [Public Cloud Run app](https://batchlens-hk3hxwi5na-as.a.run.app/) |
+| Prescribed-template pitch deck | [PDF, 14 slides, under 5 MB](docs/submission/BatchLens-Pitch-Deck.pdf) · [PowerPoint](docs/submission/BatchLens-Pitch-Review.pptx) · [Native Google Slides](https://docs.google.com/presentation/d/1_EZO4q_fb1DqmobJcNyoKLMNwv2pT2bQ2s4mr_dYXNs/edit) |
+| Public source and supporting materials | [This repository](https://github.com/mk-tdev/BatchLens) · [Research index](research/BatchLens/README.md) |
+| Brief solution description | [Ready-to-paste description, within the 1,024-character form limit](docs/submission/solution-description.txt) |
+| Working demo video, 3–4 minutes | **Pending final recording/upload.** [Three-minute recording script](research/BatchLens/06_Three_Minute_Demo_Script.md). A script or GIF is not the required video. |
+| Supporting posters | [Project overview PDF](docs/submission/BatchLens-Project-Poster.pdf) · [Agentic workflow PDF](docs/submission/BatchLens-Agentic-Workflow-Poster.pdf) |
 
-- A Gemini quality investigator that autonomously calls read, archive-search and trace tools, then submits cited findings for human review.
-- An explorable Three.js factory with moving crew, conveyor, forklift and drone, plus illustrated rooms for every investigation chapter.
-- Mira’s evidence workbench: original documents, Gemini extraction, source quotations, corrections and explicit reviewer confirmation.
-- Sol’s assembly schematic: component-to-batch-to-shipment trace with source-linked relationships and separate unresolved quantities.
-- Pip’s dispatch office: recover a missing packing slip, resolve its shipment relationship and save an inspection handover.
-- Immutable proposal snapshots, downloadable HTML reports and CSV exports, a shift journal, and case persistence across refreshes.
-- Motion controls, reduced-motion support, mobile room layouts and a usable case desk when WebGL is unavailable.
+The [submission pack](docs/submission/README.md) maps the materials to the organizer's form, including the PDF size limit, public-link checks and remaining video step. The first and last deck slides retain the organizer template; the title slide names PixelTrendAnalytics and team leader Muthukumar Arunachalam. PDF playback is static; animations remain in supported presentation playback.
 
-Characters and dialogue are authored guides. Gemini reads evidence images; it does not generate the characters’ dialogue or autonomously approve inspection decisions.
+## The problem and intended impact
 
-## Try the complete story
+A quality complaint rarely arrives with a complete investigation. Labels, supplier checks, production records and dispatch slips are scattered. A reviewer must distinguish a recorded connection from a proven defect, account for missing evidence, and explain why units enter the inspection scope.
 
-Start with **Pip / AI investigator → Let Pip investigate** to watch real Gemini choose tools and gather evidence. Inspect its journal and source citations, then use the operator checkpoints below. The agent cannot approve facts or release shipments.
+BatchLens combines source reading, an auditable AI investigation and deterministic tracing in one workflow. The intended benefit is less searching and a clearer handover. A future quality-team pilot would measure review time, missed connections and decision errors; **production savings and defect-detection accuracy have not been measured**.
 
-1. Select **Enter factory · Play as Pip**. Walk with WASD/arrows or the touch pad; drag to look. Follow the minimap to Mira and press **E** to enter **Mira’s evidence lab**. Scan the product label and supplier report, inspect the production and shipment ledgers, then confirm the baseline.
-2. Visit **Sol’s assembly line**. Component lot `CAP-17` connects to batches `B101`, `B102` and `B104`. Shipments S1 and S2 account for 1,000 connected units; S4’s 500 units remain unresolved.
-3. Resolve the evidence gap using the supplied recovered packing slip. Scan it, compare the candidate `B104` with the original, then explicitly confirm the S4 relationship.
-4. Join **Pip in dispatch**. The final scope is 1,500 connected units, zero unresolved units and 500 units outside the recorded connection.
-5. Add a reviewer note, save the inspection proposal, download HTML or CSV, and refresh to see the persisted handover. **Reset demo** starts a fresh case.
+The current prototype uses an original synthetic Northstar Bottles case. It is an illustrative factory environment, not a live digital twin, machine controller or validated production quality system.
 
-The conservative inspection quantity is 1,500 both before and after resolving S4. The recovered evidence improves certainty rather than artificially reducing the scope. Extraction alone never changes the trace.
+## What Pip actually does
 
-![Reviewed inspection handover on Cloud Run](docs/live-cloud-handover.jpg)
+| Capability | AI or tool behavior | Operator checkpoint |
+| --- | --- | --- |
+| Read evidence | Gemini extracts identifiers and source quotes from images; unreadable values can remain null | Inspect originals, correct or confirm candidates |
+| Investigate missing links | Gemini chooses document reads, a bounded archive search and trace tools; the journal shows actual calls and results | Accept relationships explicitly |
+| Compare causes | Gemini compares component defects, assembly variation and handling damage using cited evidence and missing checks | Review hypotheses; they are not root-cause verdicts |
+| Propose missions | Gemini selects an allowlisted fictional procedure and proposes a check at Mira's or Sol's station | Approve the demo mission before entering results |
+| Learn from results | Gemini reads immutable operator results such as R1 and reassesses its hypotheses | Enter clearly labelled synthetic observations; review the revised findings |
+| Compare scope | A deterministic tool compares connected-only, connected-plus-unresolved and all-shipment workloads | Workload assumptions are illustrative; scenarios do not issue orders |
+| Clarify operations | Gemini answers case-specific questions with citations; a separate scope gate refuses general or mixed requests | Chat is read-only and cannot approve decisions |
+| Hand over | Gemini drafts actions with owner roles, verification needs and citations | Approve drafts, save a snapshot, export HTML/CSV |
+
+Mira and Sol are scripted guides, and Pip's factory avatar is authored. Pip's **investigator and operational chat** use real Gemini. The server computes the visible change summary by comparing saved Gemini assessments; it is labelled computed. Neither AI nor the software performs physical inspections, releases stock or dispatches work orders.
+
+## Experience the complete factory story
+
+1. **Start fresh.** Open the live app, choose **Pip / AI investigator → Let Pip investigate**. Watch actual source-reading and tool activity in the factory journal.
+2. **Challenge the explanation.** Open **Causes** and inspect the supporting sources, contradictions and missing evidence. Open **Scope lab** to compare the labelled workload scenarios.
+3. **Approve a mission.** Open **Missions**, read fictional procedure E8, then select **Approve this demo mission**. Mission stations are also reachable from the factory floor.
+4. **Review the baseline.** At Mira's workbench, inspect E2 (`B101`), E3 (`CAP-17`), production ledger E4 and shipment ledger E5. Confirm the baseline. Review recovered slip E7 and explicitly confirm S4 → `B104`.
+5. **Record an operator result.** Enter sample IDs, counts, method, observations and limitations. These are **synthetic demo inputs**, not real measurements. Record all intended results before the one available follow-up investigation.
+6. **Reassess.** Select **Reassess with operator results**. Look for R-source citations and assessment changes. Use **Ask Pip** to clarify the evidence; ask a general query to see the refusal.
+7. **Review the handover.** Approve appropriate action drafts, prepare the inspection proposal, add a rationale, save the snapshot and export it. Reload to verify persistence.
+
+**Walk as Pip:** WASD/arrows or the touch pad to move, drag to look, **E** near a station to enter its workflow, **Esc** to leave walking mode. The interface also offers direct room navigation, motion controls, reduced-motion support and a case desk when WebGL is unavailable.
+
+### What the sample case establishes
+
+`CAP-17` connects to batches `B101`, `B102` and `B104`. Before S4 is reviewed, the trace includes **1,000 connected + 500 unresolved = 1,500 units** for conservative inspection. After the recovered mapping is approved, it shows **1,500 connected + 0 unresolved**. Another 500 units have no recorded connection; that does not certify safety.
+
+The recovered record improves certainty; it does not artificially reduce the conservative total. A live adaptive run recorded R1 as two leaking assemblies out of five fictional samples. Gemini changed the component-defect hypothesis from unresolved to supported, while assembly and handling remained unresolved. This demonstrates reassessment, not a proven root cause or lot-wide defect.
+
+[![The working first-person factory experience](docs/submission/live-walkable-factory.png)](https://batchlens-hk3hxwi5na-as.a.run.app/)
+
+[Mission/result screenshot](docs/submission/pip-mission-result.png) · [Operational chat screenshot](docs/submission/pip-operational-chat.png) · [Example exported handover](docs/submission/adaptive-handover-example.html)
+
+## Why this fits the manufacturing challenge
+
+The challenge asks for operational data to become useful insights, recommendations or actions. BatchLens focuses on **quality investigation and an operational copilot**: evidence becomes cited hypotheses, proposed checks and a reviewed inspection handover. It uses Gemini on Vertex AI for reasoning and assistance, and Cloud Run for the application. It does not claim every suggested challenge technology is implemented.
+
+| Google service | Actual use |
+| --- | --- |
+| **Gemini 3.5 Flash-Lite on Vertex AI** | Image extraction, manual function-calling loop, structured findings, scope classification and cited operational answers |
+| **Cloud Run** | Public React/FastAPI application and server-side AI orchestration in `asia-southeast1` |
+| **Firestore** | Named `batchlens` database for cases, candidates, missions/results, review history, chat and frozen proposals |
+| **Cloud Build + Artifact Registry** | Container build and image delivery to Cloud Run |
+| **Cloud Storage** | Deployment source staging; case evidence is packaged with the app |
+| **Firebase** | No Firebase Hosting, Authentication or client SDK is used. Firestore is accessed through its server SDK. |
+
+## Architecture and authority
+
+```mermaid
+flowchart TD
+    UI[Playable factory and journal] --> API[FastAPI on Cloud Run]
+    API --> Agent[Gemini investigator on Vertex AI]
+    Agent --> Tools[Validated reads, archive search, trace, procedures, missions and comparison]
+    Tools --> Agent
+    Agent --> Draft[Cited hypotheses, mission proposals and action drafts]
+    Draft --> Human[Operator review and approval]
+    Human --> Result[Recorded synthetic inspection result]
+    Result --> Agent
+    Human --> Trace[Deterministic confirmed-scope engine]
+    Trace --> Handover[Frozen HTML and CSV handover]
+    API --> Chat[Gemini operational scope gate and read-only answers]
+    API --> Store[Firestore in cloud / SQLite locally]
+```
+
+Tool results and documents are untrusted input. The tool allowlist has no approval, release or machine-control operation. Case ownership, origin checks, revision checks, request deduplication and immutable result records protect mutations. Reports and comparisons are investigation-time snapshots; later human approvals do not rewrite earlier AI observations.
+
+The live investigator permits **two runs per case**, each with up to five tool-calling turns plus one schema-constrained report turn, 24 tool actions and 95 seconds. Cases allow eight image extraction attempts, twelve investigator calls, and six chat questions/up to twelve chat calls. All share a **100-model-attempt daily limit**. Cloud Run has zero minimum and two maximum instances. These are usage controls, not a monetary spending cap. Case access expires after 24 hours, with eventual Firestore TTL cleanup.
 
 ## Run locally
 
-Prerequisites: **Node.js 22+**, **Python 3.13**, and Git.
+Prerequisites: **Node.js 22+**, **Python 3.13** and Git.
 
 ```sh
 git clone https://github.com/mk-tdev/BatchLens.git
@@ -54,13 +121,13 @@ cp .env.example .env
 ./scripts/dev.sh
 ```
 
-Open http://127.0.0.1:5173. Vite forwards `/api` requests to FastAPI on port 8000. Stop with Ctrl+C. Local SQLite data is stored in `.data/`, which is excluded from Git.
+Open `http://127.0.0.1:5173`. Vite forwards `/api` to FastAPI on port 8000. Ctrl+C stops the servers. Local SQLite data stays in ignored `.data/`.
 
-The default local mode uses **clearly labeled authored extraction fixtures**, so teammates can run the full workflow without cloud credentials or model charges. Never commit `.env`, credentials or case data.
+Default local mode uses **labelled authored image-extraction fixtures** for the manual evidence-to-handover workflow. **Pip's autonomous investigator and operational chat require real Gemini**; fixture mode does not simulate them.
 
-### Enable real Gemini locally
+### Enable real Gemini
 
-For Vertex AI, authenticate Application Default Credentials with `gcloud auth application-default login`, then set these values in `.env`:
+Authenticate Application Default Credentials with `gcloud auth application-default login`, then set the following in `.env`:
 
 ```dotenv
 GOOGLE_CLOUD_PROJECT=your-approved-project-id
@@ -69,100 +136,47 @@ MODEL_ID=gemini-3.5-flash-lite
 DAILY_MODEL_CALL_LIMIT=100
 ```
 
-Your identity needs access to the project’s enabled Vertex AI API and model. Alternatively, set `GEMINI_API_KEY` and a `MODEL_ID` supported by that API instead of using Vertex AI credentials. Model availability depends on the provider and project. Restart the development servers after changing configuration.
+The project must have Vertex AI enabled and your identity must have model access. Alternatively, set `GEMINI_API_KEY` and a model supported by that API. Restart after configuration changes. Never commit `.env` or credentials. Live failures are shown and never silently replaced with fixtures. Cloud Run refuses authored mode.
 
-The backend uses `google-genai` and structured Pydantic output. Unreadable identifiers can return null; invalid identifiers are rejected. Live failures are surfaced and never replaced silently with fixture answers. Cloud Run refuses to start in authored mode.
-
-## Architecture
-
-```mermaid
-flowchart LR
-    UI[React factory story] --> API[FastAPI API]
-    API --> AI[Gemini image extraction]
-    AI --> Review[Candidate awaiting human review]
-    Review --> Engine[Deterministic trace engine]
-    Engine --> Report[Inspection snapshots and exports]
-    API --> Store[SQLite locally / Firestore in cloud]
-    Sources[Packaged synthetic evidence] --> API
-```
-
-React, TypeScript and Vite power the interface; Three.js renders the factory. FastAPI owns case access, extraction, review commands and exports. A pure trace engine computes scope from confirmed relationships, counting each shipment line once. SQLite and Firestore adapters persist investigations with revision checks and request deduplication.
-
-The bounded MVP stores one JSON document per investigation, with up to 24 review commands, three proposal snapshots and eight extraction attempts plus twelve investigator model calls. Larger investigations need a revised storage model.
-
-```text
-frontend/             React interface, factory scene, custom artwork
-backend/app/          API, Gemini adapter, trace engine, storage
-backend/scenarios/    Original synthetic evidence and CSV records
-scripts/              Development, evidence rendering, cleanup, live smoke check
-tests/                Backend regression and Playwright browser tests
-deploy/               Cloud Build and Cloud Run deployment scripts
-research/BatchLens/         Project explanation, user guide, submission preparation
-```
-
-## Google Cloud deployment
-
-The current demo runs on **Cloud Run in asia-southeast1**, with a named **Firestore database `batchlens`** and **Gemini 3.5 Flash-Lite through Vertex AI**. Runtime authentication uses a service identity, with no browser API key or downloaded service-account key.
-
-Deployment requires an authenticated Google Cloud CLI, a billing-enabled project, and permission to configure the required APIs, IAM, build resources and service. The scripts default to the existing demo project; explicitly set your target for a separate deployment:
-
-```sh
-export BATCHLENS_PROJECT=your-approved-project-id
-export BATCHLENS_REGION=asia-southeast1
-export BATCHLENS_MODEL=gemini-3.5-flash-lite
-bash deploy/cloudrun.sh setup
-bash deploy/cloudrun.sh deploy
-bash deploy/cloudrun.sh publish
-```
-
-`setup` enables APIs and provisions service identities, scoped permissions, an image repository, build bucket, named database and TTL. `deploy` builds and deploys the container. `publish` grants public invocation. These commands change cloud resources and can incur usage charges; they are not needed for local development. Do not redeploy the shared demo without coordinating with the owner.
-
-Configured limits: minimum zero / maximum two instances, 100 model attempts per day across cases, eight image scans plus twelve investigator model calls per case, and one concurrent extraction per case. **These are usage controls, not a monetary spending cap.** Cloud billing and credits must be managed separately. The hosted demo depends on available project credits and service access.
-
-## Verification
+### Verify and deploy
 
 ```sh
 .venv/bin/python -m pytest -q
 npm run build
-# With both local servers running:
-npm run types
+# Optional browser suite, with local servers running:
 npx playwright install chromium
 npm run test:e2e
-# Optional live verification: consumes four real model calls
+# Optional hosted extraction smoke check; consumes four real model calls:
 .venv/bin/python scripts/live_smoke.py https://YOUR-SERVICE-URL
 ```
 
-Recorded on 15 October 2026: 10 backend tests and the production build passed. The hosted Gemini workflow read E2 → B101, E3 → CAP-17, unreadable E6 → null, and recovered E7 → B104. Human confirmations, final scope, HTML/CSV exports and reload passed. See [machine-readable live verification](docs/live-cloud-verification.json) and [validation history](docs/validation.md). Automated Playwright tests are provided but have not been reported as passing; browser walkthroughs were performed manually.
+**Recorded verification, 17 October 2026:** 22 backend tests and the production build passed. Manual internal-browser checks on the hosted app covered real Gemini investigation, mission approval, R1 entry, reassessment, baseline/S4 review, action approval, export and saved-case reload. Operational chat answered a cited case question and refused an off-topic override. The browser automation suite is provided but is not claimed as passing. See [adaptive verification](research/BatchLens/11_Adaptive_Operations.md) and [deployment record](research/BatchLens/05_Deployment_and_Verification.md).
 
-## Data, security and limitations
+For your own deployment, review [the deployment guide](research/BatchLens/05_Deployment_and_Verification.md) and `deploy/cloudrun.sh`. Explicitly set `BATCHLENS_PROJECT`, `BATCHLENS_REGION` and `BATCHLENS_MODEL`. The script's `setup`, `deploy` and `publish` stages provision billable cloud resources and permissions. Coordinate with the owner before changing the shared demo.
 
-- Only the supplied synthetic scenario is supported. Arbitrary uploads and real confidential records are outside this MVP.
-- Case ownership uses an HttpOnly cookie; deployed cookies use Secure and SameSite=Strict. Mutations check origin/custom headers, expected revision and duplicate requests.
-- Case access expires after 24 hours. Firestore TTL performs eventual physical cleanup; local cleanup is `.venv/bin/python scripts/cleanup.py`.
-- The model proposes facts; a human confirms them. The audit trail records review decisions and proposal snapshots.
-- A recorded relationship supports inspection, not proof of a defect. “No recorded connection” does not mean safe.
-- No measured production savings, external user pilot or real-world defect-detection performance is claimed.
+## Source map and research
 
-## Team handoff and documentation
+```text
+frontend/           React, TypeScript, Three.js factory, custom components and art
+backend/app/        API, Gemini investigator/chat, deterministic tracing and storage
+backend/scenarios/  Original synthetic evidence and operational records
+tests/              Backend regressions and browser test definitions
+deploy/             Cloud Build and Cloud Run configuration
+scripts/            Local development, evidence rendering and verification tools
+docs/submission/    PDF/PPTX deck, posters, description, screenshots and handover
+research/BatchLens/ Project explanation, architecture, guides and judge Q&A
+```
 
-The repository is public for teammates and hackathon judges. Anyone can clone it and use authored local mode immediately; write access and cloud access are granted separately. Work on a feature branch and open a pull request before changing the shared demo.
-
-- [Project overview and impact](research/BatchLens/01_Project_Overview.md)
-- [Technical explanation](research/BatchLens/02_How_It_Works.md)
-- [User guide and three-minute demo script](research/BatchLens/03_User_Guide_and_Demo_Script.md)
+- [Project overview](research/BatchLens/01_Project_Overview.md) · [How it works](research/BatchLens/02_How_It_Works.md)
+- [Adaptive AI and operations guide](research/BatchLens/11_Adaptive_Operations.md) · [Investigator controls](research/BatchLens/10_AI_Quality_Investigator.md)
 - [Submission checklist and judge Q&A](research/BatchLens/04_Submission_Checklist_and_Judge_QA.md)
-- [Deployment and live verification](research/BatchLens/05_Deployment_and_Verification.md)
-- [Three-minute video recording script](research/BatchLens/06_Three_Minute_Demo_Script.md)
-- [AI investigator architecture and controls](research/BatchLens/10_AI_Quality_Investigator.md)
-- [Playable factory controls and template alignment](research/BatchLens/09_Playable_Factory.md)
-- [All research and organizer requirements](research/BatchLens/README.md)
-- [Asset provenance](docs/provenance.md)
-- [Original build plan](BUILD_PLAN.md) — design intent and historical scope, not a claim that every planned feature shipped.
+- [Three-minute recording script](research/BatchLens/06_Three_Minute_Demo_Script.md) · [Playable factory](research/BatchLens/09_Playable_Factory.md)
+- [All research](research/BatchLens/README.md) · [Asset provenance](docs/provenance.md) · [Original build plan](BUILD_PLAN.md)
 
-The logo, SVG characters, factory geometry and evidence artifacts were authored for BatchLens. The illustrative bottle photograph is AI-generated and is not used as extraction evidence. Third-party dependencies retain their respective licenses. No project license has been selected yet.
+## Boundaries, team and attribution
 
-## Adaptive operations
+Only the supplied synthetic scenario and fictional inspection procedures are supported. General uploads, enterprise authentication, ERP integration and real machine control are future work. Semantic chat filtering is model-based; hard code-level boundaries prevent chat from changing decisions. No production accuracy, industrial certification, physical tests performed by AI or measured savings are claimed.
 
-Pip now compares possible causes, proposes procedure-backed inspection missions, and reassesses operator-entered synthetic results. Open the investigator journal to use **Causes**, **Missions**, **Scope lab**, **Handover**, and **Ask Pip**. Operational chat uses real Gemini with a scope gate and case citations; it has no decision-changing tools.
+**Team:** PixelTrendAnalytics · **Team leader:** Muthukumar Arunachalam · **Public source:** [mk-tdev/BatchLens](https://github.com/mk-tdev/BatchLens).
 
-See [Adaptive operations and demo guide](research/BatchLens/11_Adaptive_Operations.md) for the full workflow, authority boundaries, fictional procedure disclosures and usage limits. The shared daily limit remains 100 model attempts. Chat permits six questions per case, with up to two model calls each.
+The mark, crew artwork, factory geometry and evidence records were authored for BatchLens. Screenshots show the working prototype. The illustrative bottle photo and cinematic artwork are AI-generated and are not extraction evidence. Dependencies retain their licenses; a project-wide license has not yet been selected. See [asset provenance](docs/provenance.md).

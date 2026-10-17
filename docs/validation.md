@@ -37,3 +37,7 @@ Replaced the remaining corporate desk with four factory chapters and rebuilt bas
 ## Cloud deployment verification — 15 October 2026
 
 This supersedes the earlier local-only integration limits. Cloud Build succeeded and Cloud Run served the app with Firestore and real Vertex AI Gemini extraction. Ten backend tests and the production frontend build passed. The hosted smoke check verified four real image extractions, confirmation boundaries, final scope of 1,500 included / zero unresolved / 500 outside, HTML and CSV exports and persisted reload. See [verification JSON](live-cloud-verification.json). A manual browser walkthrough also completed the factory-story handover on the public service. The standalone Playwright runner is still not claimed as passing.
+
+## Adaptive investigation — 17 October 2026
+
+22 backend tests and the production build passed. Hosted internal-browser verification completed real Gemini source gathering, cause comparison, mission proposal, human approval, synthetic R1 entry, follow-up reassessment, baseline/S4 review, action approval, frozen HTML export and reload. Operational chat answered a case question with citations and refused an off-topic override. See [adaptive verification](../research/BatchLens/11_Adaptive_Operations.md). These later cloud results supersede the earlier local-only limitations; the standalone Playwright suite remains unclaimed.

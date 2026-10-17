@@ -44,8 +44,12 @@ The initial audience is quality managers and operations teams investigating supp
 
 ## Honest boundaries
 
-This MVP supports one curated scenario and a supplied recovered slip. It is not connected to an ERP, live production equipment or logistics system. The crew dialogue and animations are authored; Gemini performs document extraction. The app does not automatically release shipments, diagnose every defect, issue a recall or make a final safety decision. Current implementation and live verification status are recorded in the deployment document.
+This MVP supports one curated scenario and a supplied recovered slip. It is not connected to an ERP, live production equipment or logistics system. The crew dialogue and animations are authored. Real Gemini performs image extraction, autonomously selects investigation tools, compares causes, proposes inspection missions and reassesses operator results. Its case-specific chat answers operational questions with citations. The app does not automatically release shipments, diagnose every defect, issue a recall or make a final safety decision. Current implementation and live verification status are recorded in the deployment document.
+
+## Adaptive investigation
+
+Pip now proposes fictional-procedure-backed missions that require operator approval, reads immutable synthetic results and revises its hypotheses. The journal exposes actual tool activity; a deterministic comparison shows changes between saved assessments. Corrective-action drafts require human review before handover. See [Adaptive operations](11_Adaptive_Operations.md) for the current implementation and live verification.
 
 ## Brief submission description
 
-BatchLens turns manufacturing evidence into a source-backed inspection plan through an interactive factory story. Reviewers work with Mira, Sol and Pip to inspect labels and supplier reports, trace component lots through finished batches, resolve a missing shipment record and save an inspection handover. Gemini extracts identifiers and supporting quotes from source images; people confirm the results before a deterministic trace engine changes scope. Unresolved shipments remain included. The Northstar Bottles demo uses synthetic evidence to show how a quality team can move from one leaking cap to a clear, auditable proposal.
+Use the [current form-ready description](../../docs/submission/solution-description.txt), which covers the agentic workflow and actual Google services within the portal's 1,024-character limit. The [submission pack](../../docs/submission/README.md) includes the PDF deck, editable export, posters, source links and the outstanding video step.

@@ -1,17 +1,22 @@
-# BatchLens submission research
+# BatchLens project and submission research
 
-**Live demo:** https://batchlens-hk3hxwi5na-as.a.run.app/
+**Team:** PixelTrendAnalytics · **Team leader:** Muthukumar Arunachalam
+**Challenge:** Manufacturing: Intelligent Operations & Industrial Efficiency
+**Live app:** https://batchlens-hk3hxwi5na-as.a.run.app/
+**Public repository:** https://github.com/mk-tdev/BatchLens
 
-Read these documents in order to explain the project and prepare the hackathon submission.
+Start with the [submission pack](../../docs/submission/README.md) for the PDF deck, posters, 1,024-character description and required video status. Then use the research below to explain the project.
 
-1. [Project overview](01_Project_Overview.md) — problem, product, impact, synthetic case and a short submission description.
-2. [How it works](02_How_It_Works.md) — architecture, Gemini’s role, trace rules, data flow and review controls.
-3. [User guide and demo script](03_User_Guide_and_Demo_Script.md) — exact walkthrough, suggested three-minute narration and troubleshooting.
-4. [Submission checklist and judge questions](04_Submission_Checklist_and_Judge_QA.md) — the five organizer requirements, deck content and honest answers.
-5. [Deployment and verification](05_Deployment_and_Verification.md) — actual hosting and live-AI verification status.
+| Document | Purpose |
+| --- | --- |
+| [01 Project overview](01_Project_Overview.md) | Problem, users, synthetic scenario and intended impact |
+| [02 How it works](02_How_It_Works.md) | Architecture, source review, trace rules and persistence |
+| [03 Original manual user guide](03_User_Guide_and_Demo_Script.md) | Manual evidence-to-handover workflow; use 06 for the current video |
+| [04 Submission checklist and judge Q&A](04_Submission_Checklist_and_Judge_QA.md) | Actual form requirements and current agentic answers |
+| [05 Deployment and verification](05_Deployment_and_Verification.md) | Google Cloud configuration and live verification history |
+| [06 Current three-minute demo script](06_Three_Minute_Demo_Script.md) | Agentic investigation, mission/result, reassessment, chat and handover |
+| [09 Playable factory](09_Playable_Factory.md) | Factory controls and template alignment |
+| [10 Investigator architecture](10_AI_Quality_Investigator.md) | Gemini tool loop and authority controls |
+| [11 Adaptive operations](11_Adaptive_Operations.md) | Cause comparison, missions, results, scope lab, chat and live evidence |
 
-The organizer requirements are preserved in [requirements.txt](../requirements.txt). The public source repository is [mk-tdev/BatchLens](https://github.com/mk-tdev/BatchLens). The pitch uses the prescribed organizer template. The actual demo recording and its URL are still required.
-
-6. [Three-minute recording script](06_Three_Minute_Demo_Script.md) — timed narration, exact clicks, recording guidance and truthful AI disclosures.
-
-**Pitch deck:** https://docs.google.com/presentation/d/1_EZO4q_fb1DqmobJcNyoKLMNwv2pT2bQ2s4mr_dYXNs/edit
+The earlier organizer summary is preserved in [requirements.txt](../requirements.txt). The portal additionally specifies a PDF up to 5 MB, a 3–4 minute working video and a description up to 1,024 characters. These were checked on 17 October 2026; recheck the portal before final submission. The deck uses the prescribed template. **The final video recording/upload URL remains pending.**

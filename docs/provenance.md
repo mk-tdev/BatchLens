@@ -26,3 +26,7 @@ The factory-room expansion adds original animated SVG portraits for Mira and Sol
 The pitch uses a generated cinematic factory illustration (`docs/submission/night-shift-art.png`) as cover and closing atmosphere. It is illustrative and does not depict a real plant or replace product evidence. The original app SVG portraits of Mira, Sol and Pip were rendered to PNG without redesign. `factory-motion.gif` uses browser-recorded frames of the real app's animated factory. Product evidence screenshots remain distinct from the illustration.
 
 The native Google Slides deck retains organizer branding and required subject sections, with a midnight-green, mint and amber treatment matching BatchLens. Its factory GIF provides motion in supported presentation playback; PDF exports are static.
+
+## Public submission posters — 17 October 2026
+
+`BatchLens-Project-Poster` and `BatchLens-Agentic-Workflow-Poster` are original vector PDF layouts generated with ReportLab from `scripts/create_submission_posters.py`. Their PNG previews are rendered from those PDFs with Poppler. They reuse the original Mira/Sol/Pip portraits and actual app screenshots; neither poster is a fabricated product screenshot. QR codes link to the public app and source repository. The posters use Arial where available with Helvetica fallbacks and do not imply organizer endorsement.

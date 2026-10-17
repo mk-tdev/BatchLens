@@ -1,77 +1,49 @@
-# BatchLens: three-minute demo video script
+# BatchLens: three-minute agentic demo script
 
-Target runtime: **3:00**. Record the hosted application, not localhost. This is a recording script, not a finished video.
+**Target:** 3:00, within the organizer's required **3–4 minutes**. This is the current recording script, not a finished video. The final recording/upload URL remains pending.
 
-Live app: https://batchlens-hk3hxwi5na-as.a.run.app/
-
-Pitch: https://docs.google.com/presentation/d/1_EZO4q_fb1DqmobJcNyoKLMNwv2pT2bQ2s4mr_dYXNs/edit
+**App:** https://batchlens-hk3hxwi5na-as.a.run.app/
+**Track:** Manufacturing: Intelligent Operations & Industrial Efficiency
+**Team:** PixelTrendAnalytics
 
 ## Recording setup
 
-Use the internal browser at a desktop size, with notifications hidden and the cursor easy to follow. Keep app motion on for the opening, then pause if it distracts from source reading. Capture at 1080p when available. Record clean screen footage and voice separately for precise timing.
+Use the internal browser and the hosted Gemini deployment. Start a fresh synthetic case and keep sufficient shared daily model budget for an initial investigation, a follow-up and one or two chat checks. There are two investigator runs per case; record all intended mission results before the second run. Do not spend it on a rehearsal in the recording case.
 
-Check `/api/health` for `ai_mode: gemini`, then verify one fresh scan actually succeeds. Health configuration alone does not prove inference. Start a fresh case for the recording. The main story uses three Gemini calls: E2, E3 and E7. A rehearsal uses additional calls, so respect the 100/day limit.
+Record complete live responses. If editing out waits, overlay **“AI processing wait shortened”** and retain the original footage. Never swap fixtures for a failed live response. Clearly label the case, procedures and entered inspection results synthetic. Show actual tool calls, citations and approval clicks. Keep a quality-review note visible in the handover.
 
-The hosted verification observed a 26.9-second first extraction and 1.6–1.8-second later extractions. Record complete requests. If trimming waiting time, put **“AI processing wait shortened”** on screen. Never replace an error or model result with a fixture answer. Keep the source, returned candidate, Gemini label and confirmation action visible. If Gemini returns a wrong candidate, correct it transparently with a source-backed note or rerecord a fresh run. Do not describe a manual correction as a correct model extraction.
+## Timed shot list
 
-## Timed shot list and narration
+| Time | Screen action | Narration |
+| --- | --- | --- |
+| **0:00–0:15** | Open factory, move Pip briefly toward Mira. Overlay “Synthetic case. Real Gemini. Human review.” | “One leaking cap. Four shipments. A missing batch reference. BatchLens puts an AI quality investigator inside a factory story, so operators can follow the evidence and decide what to inspect.” |
+| **0:15–0:45** | Open **Pip / AI investigator → Let Pip investigate**. Show journal entries for source reads, archive search, a proposed mission and comparison. | “Pip uses real Gemini on Vertex AI. Gemini chooses validated tools to read records and recover the missing slip. The journal exposes the calls and results. Readings remain candidates; the agent cannot approve facts, release stock or control machines.” |
+| **0:45–1:05** | Open **Causes**, inspect a source citation, then **Scope lab**. | “Pip compares component defects, assembly variation and handling damage. Each explanation shows evidence and the next useful check. Scope scenarios use deterministic arithmetic and explicit workload assumptions. These are hypotheses and comparisons for an operator to review.” |
+| **1:05–1:30** | **Missions → Read procedure E8 → Approve this demo mission**. Enter the clearly labelled example below and record it. | “Pip proposes a procedure-backed inspection mission. I approve it, then enter this synthetic seal-check result: two leaking assemblies out of five fictional samples. The record includes sample IDs, method and limitations. It does not prove the whole lot defective.” |
+| **1:30–1:55** | **Reassess with operator results**. Open **Causes**, point to R1 citation and computed assessment changes. | “Now Gemini investigates again with R1 as new evidence. In our verified run, it changed the component-defect hypothesis to supported while other explanations remained unresolved. Read the current output rather than assuming it will match. The change summary compares the saved assessments.” |
+| **1:55–2:15** | **Ask Pip**: ask a case-specific question; show citations. Briefly show refusal of a general query if time permits. | “The operations radio answers questions about this case, using cited evidence. General queries are outside its role. Chat has no decision-changing tools, so clarification cannot bypass the operator's approvals.” |
+| **2:15–2:45** | Show baseline review of E2/E3/E4/E5 and recovered E7 confirmation, then **Handover** action approval and save proposal. Show HTML download. | “I review the original sources and confirm the shipment relationship. Fifteen hundred units are connected, with zero unresolved. I review the action drafts, add my rationale and save an exportable handover. The original evidence, mission result and review decisions travel with it.” |
+| **2:45–3:00** | Reload, show saved case and finish with public app/repo links. | “Cloud Run hosts the app, Gemini powers the investigation, and Firestore preserves the case. Our next step is a quality-team pilot measuring review time and decision errors. BatchLens makes the inspection story explainable and ready to hand over.” |
 
-### 0:00–0:18 — A quality problem worth solving
+If the baseline/source review needs more time, use up to **4:00** rather than rushing or concealing a required approval. Alternatively, capture the complete source review before the follow-up and edit it into the handover segment with a clear chronological transition. Reports and comparisons reflect their investigation-time state; later approvals do not rewrite old findings.
 
-**Screen:** Open the animated factory. Orbit briefly past Pip, the moving conveyor and the crew stations. Keep the product name visible. Overlay: “Original synthetic case. Real Gemini extraction.”
+## Example operator result
 
-**Voice:** “One leaking bottle cap. Four shipments. A missing batch reference. Which units should a quality team inspect? BatchLens turns scattered factory records into a reviewed inspection proposal. Let’s follow one investigation through Northstar’s night shift.”
+Use the mission Gemini actually proposes. The following is suitable only for the fictional CAP-17 seal-check mission:
 
-### 0:18–0:48 — Mira reads the bottle label
+- IDs: `DEMO-CAP17-01 through DEMO-CAP17-05`
+- Checked: `5`; leaking: `2`
+- Interpretation: supports the mission concern, without asserting root cause.
+- Observation: “Synthetic demonstration only: five fictional CAP-17 cap-and-bottle assemblies were represented in a seal-check record; two were marked leaking. No real physical test was performed. This does not distinguish cap dimensions from assembly torque or prove a lot-wide defect.”
 
-**Screen:** Click **Review the evidence**. At Mira’s workbench, click **Scan this evidence**. Show the original E2 label, the in-flight scanner and the returned `B101` with its source quotation and Gemini provider label. Move the cursor between the document and candidate.
+If Gemini proposes a different allowed mission, enter an appropriate labelled synthetic result and narrate the actual behavior. Never fabricate a tool call or claim a specific model outcome before it appears.
 
-**Voice:** “Mira’s workbench starts with the original bottle label. This scan sends the image to Gemini on Vertex AI. The model returns batch B101 and a supporting quote. The reading stays beside its source so a reviewer can check it. A model response alone does not change our inspection scope.”
+## Suggested operational question
 
-### 0:48–1:12 — The suspect component and factory ledgers
+“What evidence is missing before we can identify the cause of the leaking cap in this BatchLens case?”
 
-**Screen:** Click **Next: supplier report**, then **Scan this evidence**. Show `CAP-17`. Click **Next: factory ledgers**. Open E4, return, open E5 and point to S4’s blank batch. Return and click **Confirm baseline & follow the line**.
+Off-topic check: “Write a poem about space.” Show the refusal. Both checks consume real model attempts; avoid unnecessary repeats.
 
-**Voice:** “The supplier report identifies component lot CAP-17 as out of tolerance. We compare that reading with the original, then inspect the production and shipment ledgers. Shipment S4 is missing its batch reference. Now I confirm the baseline. Accepted evidence, rather than an unchecked AI guess, drives the trace.”
+## Final recording checklist
 
-### 1:12–1:35 — Sol makes uncertainty visible
-
-**Screen:** Follow Sol’s schematic. Point to CAP-17, B101/B102/B104, then S4. Hold the totals long enough to read. Overlay: “1,000 connected + 500 unresolved = 1,500 proposed for inspection.”
-
-**Voice:** “Sol traces CAP-17 through finished batches into shipments. One thousand units are connected. Another five hundred remain unresolved, so the conservative inspection proposal includes them. Five hundred have no recorded connection, which does not certify safety. Missing evidence stays visible instead of disappearing from the decision.”
-
-### 1:35–2:05 — Recover S4’s missing link
-
-**Screen:** Click **Recover the missing record**, then **Inspect recovered evidence** and **Extract from source**. Show E7 and Gemini’s `B104`. Pause before clicking **Confirm relationship** so viewers can see that extraction alone has not changed scope. Confirm, then click **Walk to dispatch office**.
-
-**Voice:** “Here is the supplied recovered packing slip. Gemini reads B104 from the image. I compare the candidate and quotation with the original, then explicitly confirm the relationship. S4 now connects to the trace. We still propose inspecting fifteen hundred units. What changed is our certainty: the unresolved quantity falls to zero.”
-
-### 2:05–2:35 — Pip saves the inspection handover
-
-**Screen:** Show 1,500 connected and zero unresolved. Click **Write the inspection proposal**. Enter the note below and click **Save reviewed snapshot**. Click **Download report** and show the report, or show the CSV download briefly. Return to the app.
-
-**Reviewer note:** “Inspect the 1,500 connected units. Reviewed the original label, supplier report, factory ledgers and recovered S4 slip. Connection supports inspection, not proof of a defect.”
-
-**Voice:** “Pip prepares the inspection handover. I record my rationale and save a snapshot of the reviewed scope. The export carries the original evidence, the readings and the review decision. This is a usable handover for another reviewer, rather than an answer they must simply trust. HTML and CSV downloads preserve the result.”
-
-### 2:35–2:50 — A working cloud application
-
-**Screen:** Reload, return through **Crew rooms** to **03 Dispatch office**, and show the saved proposal. Briefly show the shift journal if time permits. Overlay: “Cloud Run · Vertex AI Gemini · Firestore”.
-
-**Voice:** “Refresh, and the saved investigation remains. Cloud Run hosts the application, Gemini reads the evidence, and Firestore stores the case. The characters guide the story. Human review and deterministic tracing govern the decision.”
-
-### 2:50–3:00 — Close with a credible next step
-
-**Screen:** Finish on the factory, with the live demo and GitHub links. Hold the end card until 3:00.
-
-**Voice:** “Our next step is a quality-team pilot measuring review time and mapping errors. BatchLens makes an inspection decision understandable, reviewable and ready to hand over.”
-
-## Edit and submission checklist
-
-- The timeline totals exactly 180 seconds. Rehearse narration within each segment, leaving short pauses for readable results. Do not accelerate confirmation clicks beyond legibility.
-- Show all three real Gemini extractions and the explicit human confirmations. Do not use authored local mode footage as evidence of live AI.
-- Keep the original uncut recording as evidence. Label any shortened processing waits in the final edit.
-- Use captions and consistent audio. Avoid music during source reading if it competes with narration.
-- Do not call all 1,500 units defective, claim savings, or imply the crew are autonomous agents. The case is synthetic and arbitrary uploads are not supported.
-- Export a 3:00 video, upload to the organizer-supported host, verify judge access while signed out, then add its URL to the pitch deck’s links slide and submission form.
-- The script does not create or upload a video. The recording URL remains pending until a real recording exists.
+Show the real Gemini label, actual calls, originals and citations; human mission approval; synthetic result; follow-up findings; reviewed scope; saved/exported handover and persisted reload. Caption speech and disclose shortened processing waits. Do not claim lot-wide defects, certified safety or measured savings. Upload the final **3–4 minute** video to an organizer-supported host, test public access while signed out, then add its actual URL to the deck, README and submission form.
