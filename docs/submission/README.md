@@ -16,14 +16,14 @@ Checked against the [prototype submission form](https://hack2skill.com/event/aib
 | Prototype deployed on GCP/Cloud Run | https://batchlens-hk3hxwi5na-as.a.run.app/ | Deployed public prototype |
 | Final prototype deck converted into PDF | [BatchLens-Pitch-Deck.pdf](BatchLens-Pitch-Deck.pdf) | 14 slides, approximately 0.53 MiB; form accepts PDF up to 5 MB |
 | GitHub repository, public access | https://github.com/mk-tdev/BatchLens | Public source and research |
-| Demo video link, 3–4 minutes | Final recording/upload URL | **Pending.** [Recording script](../../research/BatchLens/06_Three_Minute_Demo_Script.md) is preparation, not a video |
+| Demo video link, 3–4 minutes | [Watch the 3:30 demo](https://youtu.be/aosveR1UzOM) | Published YouTube demonstration |
 | Brief description including Google services | [Copy this text](solution-description.txt) | Within the form's 1,024-character limit |
 
 The live prototype and public materials must remain available throughout evaluation. The form requires a working video demonstration; a script, poster, GIF or slideshow does not replace it. Check the portal for the current deadline and any organizer changes before submitting.
 
 ## Deck and visuals
 
-Latest exports: **18 October 2026**. The cost slide includes the measured Gemini token usage and the estimated total monthly cloud budgets for 100 and 1,000 cases. Infrastructure estimates and pricing sources appear in the PowerPoint speaker notes.
+Latest exports: **18 October 2026**. The links slide includes the published [YouTube demo](https://youtu.be/aosveR1UzOM). The cost slide includes the measured Gemini token usage and the estimated total monthly cloud budgets for 100 and 1,000 cases. Infrastructure estimates and pricing sources appear in the PowerPoint speaker notes.
 
 - [PDF pitch deck](BatchLens-Pitch-Deck.pdf) — static export of the reviewed native deck; first and last organizer-template slides retained.
 - [Editable PowerPoint export](BatchLens-Pitch-Review.pptx).
@@ -52,7 +52,7 @@ These are synthetic demonstration records. The operator-entered seal-check resul
 
 ## Before final submission
 
-1. Record and publish a **3–4 minute** video showing real Gemini, source review, mission approval, a labelled synthetic operator result, reassessment and saved handover. Disclose any shortened processing waits.
-2. Test the video link and GitHub/PDF access while signed out. Add the actual video URL to the deck, repository and submission form when available.
+1. Review the published **3:30 demo**: https://youtu.be/aosveR1UzOM. The source recording uses real Gemini and labelled synthetic operator results, with shortened processing waits disclosed.
+2. Confirm the video, GitHub and PDF are accessible without requesting permission. The demo URL is included in the deck and repository; paste it into the submission form.
 3. Open the deployed app and check a real inference, not only the health endpoint. Keep model budget, APIs and hosting available through evaluation.
 4. Upload the prescribed-template PDF, paste the public URLs and description, and review the form. Final submission is a separate action.

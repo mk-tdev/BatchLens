@@ -10,7 +10,7 @@ One leaking cap. Four shipments. A missing batch reference. BatchLens helps a qu
 
 **AI Builder Cup 2026** · **PixelTrendAnalytics** · **Manufacturing: Intelligent Operations & Industrial Efficiency**
 
-[**Open the live factory →**](https://batchlens-hk3hxwi5na-as.a.run.app/) · [**Pitch deck PDF**](docs/submission/BatchLens-Pitch-Deck.pdf) · [**Submission pack**](docs/submission/README.md) · [**Research**](research/BatchLens/README.md)
+[**Watch the 3:30 demo →**](https://youtu.be/aosveR1UzOM) · [**Open the live factory →**](https://batchlens-hk3hxwi5na-as.a.run.app/) · [**Pitch deck PDF**](docs/submission/BatchLens-Pitch-Deck.pdf) · [**Submission pack**](docs/submission/README.md) · [**Research**](research/BatchLens/README.md)
 
 [![BatchLens project poster: a factory story with a real AI investigator](docs/submission/BatchLens-Project-Poster.png)](docs/submission/BatchLens-Project-Poster.pdf)
 
@@ -22,10 +22,10 @@ One leaking cap. Four shipments. A missing batch reference. BatchLens helps a qu
 | Prescribed-template pitch deck | [PDF, 14 slides, under 5 MB](docs/submission/BatchLens-Pitch-Deck.pdf) · [PowerPoint](docs/submission/BatchLens-Pitch-Review.pptx) · [Native Google Slides](https://docs.google.com/presentation/d/1_EZO4q_fb1DqmobJcNyoKLMNwv2pT2bQ2s4mr_dYXNs/edit) |
 | Public source and supporting materials | [This repository](https://github.com/mk-tdev/BatchLens) · [Research index](research/BatchLens/README.md) |
 | Brief solution description | [Ready-to-paste description, within the 1,024-character form limit](docs/submission/solution-description.txt) |
-| Working demo video, 3–4 minutes | **Pending final recording/upload.** [Three-minute recording script](research/BatchLens/06_Three_Minute_Demo_Script.md). A script or GIF is not the required video. |
+| Working demo video, 3–4 minutes | [Watch the 3:30 YouTube demo](https://youtu.be/aosveR1UzOM). Real Gemini investigation, human-approved mission, synthetic R1, reassessment and handover. |
 | Supporting posters | [Project overview PDF](docs/submission/BatchLens-Project-Poster.pdf) · [Agentic workflow PDF](docs/submission/BatchLens-Agentic-Workflow-Poster.pdf) |
 
-The [submission pack](docs/submission/README.md) maps the materials to the organizer's form, including the PDF size limit, public-link checks and remaining video step. The first and last deck slides retain the organizer template; the title slide names PixelTrendAnalytics and team leader Muthukumar Arunachalam. PDF playback is static; animations remain in supported presentation playback.
+The [submission pack](docs/submission/README.md) maps the materials to the organizer's form, including the PDF size limit, public-link checks and final manual submission steps. The first and last deck slides retain the organizer template; the title slide names PixelTrendAnalytics and team leader Muthukumar Arunachalam. PDF playback is static; animations remain in supported presentation playback.
 
 ## The problem and intended impact
 
