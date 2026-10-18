@@ -1,0 +1,49 @@
+BatchLens — measured Gemini usage for one complete demo case
+18 October 2026, approximately 14:00–14:03 Singapore time
+
+Total input tokens: 66,308
+Total output tokens: 3,087
+Model calls: 19 (all returned HTTP 200)
+Model: gemini-3.5-flash-lite on Vertex AI, global location.
+
+This is an actual fresh hosted-app run, not an estimate:
+Pip investigated, a human approved the seal-check mission, the operator entered
+R1 (a labelled synthetic two-of-five leakage observation), Gemini reassessed,
+and Pip answered three operational chat questions. We also confirmed the
+baseline and S4 mapping, saved the handover and reloaded it.
+
+Call breakdown:
+- 4 image extraction calls.
+- 9 investigator calls across initial investigation and reassessment.
+- 6 chat calls: one scope classifier and one answer for each of 3 questions.
+- Mission approval, recording R1, evidence approvals and handover added no calls.
+
+Measured case: bf90a81d-a7bd-4750-ad41-d747f8f1d310
+AI activity: 2026-10-18 06:00:47–06:02:21 UTC (14:00:47–14:02:21 SGT).
+Cloud query: 06:00:00–06:03:40.883288 UTC, allowing for metric publication lag.
+Source: Google Cloud Monitoring API, accumulated DELTA values for
+  aiplatform.googleapis.com/publisher/online_serving/token_count
+    grouped by type=input/output, model_user_id=gemini-3.5-flash-lite
+  aiplatform.googleapis.com/publisher/online_serving/model_invocation_count
+
+Isolation and cross-checks:
+No metric series existed in the hour before this run. The daily BatchLens budget
+document was absent before the run and recorded 19 afterward. This case's
+4+9+6 counters matched 19 successful Vertex AI invocations in the window.
+Cloud metrics are project/model/window totals rather than case-labelled data;
+the quiet window and matching counters are the basis for attributing them.
+The saved JSON contains the original metric labels, intervals and values.
+
+For the cost slide, use these input/output counts with the applicable current
+Vertex AI price for this model. They are not a dollar bill or a measurement of
+Cloud Run, Firestore, storage, build costs or taxes. Future runs can vary with
+Gemini's selected tool turns and answer lengths. Do not separately add the
+image inputs again: the reported input count already includes this run's scans.
+
+Official metric definitions:
+https://docs.cloud.google.com/monitoring/api/metrics_gcp_a_b
+
+Operational questions used:
+1. What changed after the operator result R1?
+2. What should I inspect next and why?
+3. Does R1 prove that the whole CAP-17 lot is defective?
