@@ -14,7 +14,7 @@ Checked against the [prototype submission form](https://hack2skill.com/event/aib
 | --- | --- | --- |
 | Challenges | Manufacturing: Intelligent Operations & Industrial Efficiency | Selected project track |
 | Prototype deployed on GCP/Cloud Run | https://batchlens-hk3hxwi5na-as.a.run.app/ | Deployed public prototype |
-| Final prototype deck converted into PDF | [BatchLens-Pitch-Deck.pdf](BatchLens-Pitch-Deck.pdf) | 14 slides, approximately 0.49 MiB; form accepts PDF up to 5 MB |
+| Final prototype deck converted into PDF | [BatchLens-Pitch-Deck.pdf](BatchLens-Pitch-Deck.pdf) | 14 slides, approximately 0.53 MiB; form accepts PDF up to 5 MB |
 | GitHub repository, public access | https://github.com/mk-tdev/BatchLens | Public source and research |
 | Demo video link, 3–4 minutes | Final recording/upload URL | **Pending.** [Recording script](../../research/BatchLens/06_Three_Minute_Demo_Script.md) is preparation, not a video |
 | Brief description including Google services | [Copy this text](solution-description.txt) | Within the form's 1,024-character limit |
@@ -22,6 +22,8 @@ Checked against the [prototype submission form](https://hack2skill.com/event/aib
 The live prototype and public materials must remain available throughout evaluation. The form requires a working video demonstration; a script, poster, GIF or slideshow does not replace it. Check the portal for the current deadline and any organizer changes before submitting.
 
 ## Deck and visuals
+
+Latest exports: **18 October 2026**. The cost slide includes the measured Gemini token usage and the estimated total monthly cloud budgets for 100 and 1,000 cases. Infrastructure estimates and pricing sources appear in the PowerPoint speaker notes.
 
 - [PDF pitch deck](BatchLens-Pitch-Deck.pdf) — static export of the reviewed native deck; first and last organizer-template slides retained.
 - [Editable PowerPoint export](BatchLens-Pitch-Review.pptx).
