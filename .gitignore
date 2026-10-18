@@ -21,3 +21,7 @@ playwright-report/
 docs/billing-*
 
 .submission-work/
+
+# Keep local submission working files out of future commits.
+# Previously published submission files remain tracked for judge access.
+/docs/submission/
